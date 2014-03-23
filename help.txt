@@ -1,0 +1,63 @@
+# Begin a line with a # to mark it as a comment
+
+# CToast is a very simple functional programming language, in which expressions are evaluated one "step" at a time. It is not intended for practical use, as it is missing many conveniences of real programming languages.
+# CToast has no real type system and uses the .NET types Int64, Double, String, and Boolean. 
+# Except for function declarations, CToast is an entirely "pure" language. Therefor it can not support IO or timing functions.
+
+# Basic math can be written using the expected symbols. You can group expressions with parentheses. % is the Mod operator.
+15 % (1 + 2 * (3 - 4) / 5)
+
+# Lists are made with commas and enclosed inside brackets. Brackets always imply a list even if they only contain one item.
+[1,2,3,4,5]
+
+# The ampersand operator will append two lists together.
+[1,2,3] & [4,5,6] = [1,2,3,4,5,6]
+
+# Use the head and tail operators to get the first element of a list, and every other element, respectively
+h:[1,2,3,4,5] = 1
+t:[1,2,3,4,5] = [2,3,4,5]
+
+Use =,<, or > to compare two values.
+3 > 5 
+3 < 5
+5 = 3 + 2
+
+# Define functions like so
+@fib(0) -> 1
+@fib(1) -> 1
+@fib(n) -> @fib(n-2) + @fib(n-1)
+
+# The evaluator will pick the first function pattern that matches the arguments. The generic case, @fib(n), is written last because a variable name will match any input.
+# If no pattern matches, the function will not evaluate.
+
+# Parameters may take one of these forms
+@sample(10) -> "Integer Literal, matches that value only"
+@sample(10.5) -> "Float Literal, matches that value only"
+@sample(true) -> "Boolean literal"
+@sample("text") -> "String literal, matches that value only"
+@sample([]) -> "Empty List, matches the empty list"
+@sample(@func) -> "Matches a function"
+@sample(x) -> "Variable, matches anything"
+@sample(x|x>0) -> "Matches if the boolean expression to the right of the | evaluates to true". The expression is a closure over all of the arguments of the function.
+
+# We can define a mapping function that applies a function to each element of a list:
+@map(@func, []) -> []
+@map(@func, list) -> @func(h:list) & @map(@func,t:list)
+
+# When a function accepts another function as an argument, it can be invoked like so:
+@map(@anotherFunction, [1,2,3,4,5])
+
+# You can also call @map with an anonymous function
+@map(@(x)->2*x,[1,2,3,4,5])
+
+# Some functions might not ever terminate
+@naturalNumbers() -> @naturalNumbers(0)
+@naturalNumbers(n) -> n & @naturalNumbers(n+1)
+
+# However, expressions are only evaluated if needed. We can define a "take" function that takes a certain number of elements from a list
+@take(1,list) -> h:list
+@take(n,list) -> h:list & @take(n-1,t:list)
+
+# The following expression will then terminate even though the @naturalNumbers() function never does.
+@take(10,@naturalNumbers())
+

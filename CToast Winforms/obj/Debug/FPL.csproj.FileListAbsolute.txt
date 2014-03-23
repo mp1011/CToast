@@ -1,0 +1,59 @@
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\bin\Debug\FPL.exe
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\bin\Debug\FPL.pdb
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Debug\ResolveAssemblyReference.cache
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Debug\FPL.Form1.resources
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Debug\FPL.Properties.Resources.resources
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Debug\FPL.csproj.GenerateResource.Cache
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Debug\FPL.exe
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Debug\FPL.pdb
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.exe
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.pdb
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\ResolveAssemblyReference.cache
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.Form1.resources
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.Properties.Resources.resources
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\FPL.exe
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\FPL.pdb
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\GenerateResource.read.1.tlog
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\GenerateResource.write.1.tlog
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\GraphSharp.dll
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\Microsoft.Contracts.dll
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\QuickGraph.dll
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\RibbonControlsLibrary.dll
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\System.Windows.Controls.Theming.dll
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\System.Windows.Controls.Theming.ExpressionDark.dll
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\WPFExtensions.dll
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\WPFToolkit.dll
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\GraphSharp.pdb
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\GraphControl.baml
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\GraphControl.g.cs
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL_Content.g.cs
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL_MarkupCompile.cache
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.g.resources
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\GeneratedInternalTypeHelper.g.cs
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL_MarkupCompile.lref
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\GraphSharp.Controls.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.exe
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.pdb
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\FPL.exe
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\FPL.pdb
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\GraphSharp.Controls.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\GraphSharp.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\Microsoft.Contracts.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\QuickGraph.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\RibbonControlsLibrary.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\System.Windows.Controls.Theming.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\System.Windows.Controls.Theming.ExpressionDark.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\WPFExtensions.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\WPFToolkit.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Debug\GraphSharp.pdb
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\GraphControl.g.cs
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL_Content.g.cs
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL_MarkupCompile.cache
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL_MarkupCompile.lref
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\GraphControl.baml
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.g.resources
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.Form1.resources
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.Properties.Resources.resources
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.csproj.GenerateResource.Cache
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Debug\FPL.csprojResolveAssemblyReference.cache

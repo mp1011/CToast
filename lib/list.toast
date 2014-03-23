@@ -1,0 +1,26 @@
+@zipWith(@func,[],[]) -> []
+@zipWith(@func,list1,list2) -> @func(h:list1,h:list2) & @zipWith(@func,t:list1,t:list2)
+
+@count([]) -> 0
+@count(list) -> 1 + @count(t:list)
+
+@skip(0,list) -> list
+@skip(n,list) -> @skip(n-1,t:list)
+
+@take(1,list) -> h:list
+@take(n,list) -> h:list & @take(n-1,t:list)
+
+@nthItem(list,0) -> []
+@nthItem(list,1) -> h:list
+@nthItem(list,n) -> @nthItem(t:list,n-1)
+
+@makeRange(a,b|a=b) -> a
+@makeRange(a,b|a<b) -> a & @makeRange(a+1,b)
+
+@reverse([]) -> []
+@reverse(list) -> @reverse(t:list) , t:list
+
+@max(list) -> @fold(@max,list)
+
+@elementAt(0,list) = 'list
+@elementAt(n,list) = @elementAt(n-1,list')

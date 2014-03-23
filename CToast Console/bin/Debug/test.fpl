@@ -1,0 +1,43 @@
+@fib2() -> 0, 1, @zipWith(@(a,b)->a+b,@fib2(), t:@fib2())
+
+@fib2(n) -> @take(n,@fib2())
+
+@double(x) -> x * 2
+
+@fac(0) -> 1
+@fac(n) -> n * @fac(n-1)
+
+@fib(0) -> 1
+@fib(1) -> 1
+@fib(n) -> @fib(n-2) + @fib(n-1)
+
+@feed(seed,@func,0) -> seed
+@feed(seed,@func,n) -> @feed(@func(seed),@func,n-1)
+
+
+
+@zipWith(@func,[],[]) -> []
+@zipWith(@func,list1,list2) -> @func(h:list1,h:list2), @zipWith(@func,t:list1,t:list2)
+
+@count([]) -> 0
+@count(list) -> 1 + @count(t:list)
+
+@apply(@func, arg) -> @func(arg)
+
+@map(@func, []) -> []
+@map(@func, list) -> @func(h:list) , @map(@func,t:list)
+
+@filter(@pred,[]) -> []
+@filter(@pred, list | @pred(h:list)) -> h:list , @filter(@pred, t:list)
+@filter(@pred,list) -> @filter(@pred,t:list)
+
+@take(1,list) -> h:list
+@take(n,list) -> h:list , @take(n-1,t:list)
+
+@isEven(n|n%2=0) -> True
+@isEven(n) -> False
+
+@naturalNumbers() -> @naturalNumbers(0)
+@naturalNumbers(n) -> n , @naturalNumbers(n+1)
+
+@head(list) -> h:list

@@ -1,0 +1,29 @@
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToast Winforms.csprojResolveAssemblyReference.cache
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\GraphControl.g.cs
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToastWinforms_Content.g.cs
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToastWinforms_MarkupCompile.cache
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToastWinforms_MarkupCompile.lref
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\CToastWinforms.exe
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\CToastWinforms.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\CToast.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\GraphSharp.Controls.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\GraphSharp.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\Microsoft.Contracts.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\QuickGraph.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\RibbonControlsLibrary.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\System.Windows.Controls.Theming.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\System.Windows.Controls.Theming.ExpressionDark.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\TreePainter_v3_1.exe
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\WPFExtensions.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\WPFToolkit.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\CToast.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\TreePainter_v3_1.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\GraphSharp.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\GraphControl.baml
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToastWinforms.g.resources
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToast.MainForm.resources
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToast.Properties.Resources.resources
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToast Winforms.csproj.GenerateResource.Cache
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToastWinforms.exe
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToastWinforms.pdb

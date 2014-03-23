@@ -1,0 +1,12 @@
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\bin\Debug\CToastTest.exe
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\bin\Debug\CToastTest.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\bin\Debug\CToast.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\bin\Debug\nunit-console-runner.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\bin\Debug\nunit.framework.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\bin\Debug\nunit.util.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\bin\Debug\nunit.core.interfaces.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\bin\Debug\nunit.core.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\bin\Debug\CToast.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\obj\x86\Debug\CToastTest.csprojResolveAssemblyReference.cache
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\obj\x86\Debug\CToastTest.exe
+C:\Users\Miko\Documents\GitHub\CToast\CToastTest\obj\x86\Debug\CToastTest.pdb

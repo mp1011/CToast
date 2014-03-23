@@ -1,0 +1,31 @@
+@quickSort([]) -> []
+@quickSort(list) -> @quickSort(@filter(@(i) -> i < h:list,t:list)) & h:list & @quickSort(@filter(@(i) -> i > h:list-1,t:list))
+
+@mergeSort([]) -> []
+@mergeSort(list|t:list=[]) -> h:list
+@mergeSort(list) -> @merge(@mergeSort(@take(@count(list)/2,list)), @mergeSort(@skip(@count(list)/2,list)))
+
+@merge([],list) -> list
+@merge(list,[]) -> list
+@merge(left,right | not (h:left > h:right)) -> h:left & @merge(t:left,right)
+@merge(left,right) -> h:right & @merge(left,t:right)
+
+@bubbleSort(list|@isSorted(list)) -> list
+@bubbleSort(list) -> @bubbleSort(@bubbleSortPass(list))
+
+@bubbleSortPass([]) -> []
+@bubbleSortPass(list|t:list = []) -> h:list
+@bubbleSortPass(list|h:list < h:t:list) -> h:list & @bubbleSortPass(t:list)
+@bubbleSortPass(list) -> h:t:list & @bubbleSortPass(h:list & t:t:list)
+
+@isSorted([]) -> true
+@isSorted(list|t:list = []) -> true
+@isSorted(list|not (h:list > h:t:list)) -> @isSorted(t:list)
+@isSorted(list) -> false
+
+@insertionSort([]) -> []
+@insertionSort(list) -> @insert(h:list, @insertionSort(t:list))
+
+@insert(item,[]) -> item
+@insert(item,list | item < h:list) -> item & list
+@insert(item,list) -> h:list & @insert(item,t:list)

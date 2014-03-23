@@ -1,0 +1,55 @@
+@naturalNumbers() -> @naturalNumbers(0)
+@naturalNumbers(n) -> n & @naturalNumbers(n+1)
+
+@max(a,b|a<b)->b
+@max(a,b)->a
+
+@random(0) -> 0
+@random(n) -> (1664525 * @random(n-1) + 1013904223) % 4294967296
+
+@gcd(a,0) -> a
+@gcd(a,b) -> @gcd(b,a % b)
+@gcd(list) -> @fold(@gcd,list)
+
+@fib(0) -> 1
+@fib(1) -> 1
+@fib(n) -> @fib(n-2) + @fib(n-1)
+
+@fib2() -> 0 & 1 & @zipWith(@(a,b)->a+b,@fib2(), t:@fib2())
+@fib2(n) -> @take(n,@fib2())
+
+@fac(0) -> 1
+@fac(n) -> n * @fac(n-1)
+
+@pow(num,0) -> 1
+@pow(num,1) -> num
+@pow(num, power) -> num * @pow(num,power-1)
+
+@upArrow(a,b,1) -> @pow(a,b)
+@upArrow(a,1,n) -> a
+@upArrow(a,b,n) -> @upArrow(a, @upArrow(a,b-1,n),n-1)
+
+@graham(0) -> 4
+@graham(n) -> @upArrow(3,3,@graham(n-1))
+@grahamsNumber() -> @graham(64)
+
+@ack(0,n) -> n + 1
+@ack(m|m>0,0) -> @ack(m-1,1)
+@ack(m,n) -> @ack(m-1,@ack(m,n-1))
+
+@acker(m,n,0) -> m+n
+@acker(m,0,1) -> 0
+@acker(m,0,2) -> 1
+@acker(m,0,p|p>2) -> m
+@acker(m,n|n>0,p|p>0) -> @acker(m,@acker(m,n-1,p),p-1)
+
+@hyper(0,a,b) -> b+1
+@hyper(1,a,0) -> a
+@hyper(2,a,0) -> 0
+@hyper(n|n>2,a,0) -> 1
+@hyper(n,a,b) -> @hyper(n-1,a,@hyper(n,a,b-1))
+
+@sudan(0,x,y) -> x + y
+@sudan(n,0) -> x
+@sudan(n,x,y)-> @sudan(n-1,@sudan(n,x,y-1),@sudan(n,x,y-1)+y))
+

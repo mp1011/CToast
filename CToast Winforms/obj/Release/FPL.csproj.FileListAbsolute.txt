@@ -1,0 +1,16 @@
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\bin\Release\FPL.exe
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\bin\Release\FPL.pdb
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Release\ResolveAssemblyReference.cache
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Release\FPL.Properties.Resources.resources
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Release\FPL.csproj.GenerateResource.Cache
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Release\FPL.exe
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Release\FPL.pdb
+E:\Documents and Settings\Mike\Local Settings\Application Data\Temporary Projects\FPL\obj\Release\FPL.Form1.resources
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Release\ResolveAssemblyReference.cache
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Release\FPL.Form1.resources
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Release\FPL.Properties.Resources.resources
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Release\FPL.csproj.GenerateResource.Cache
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Release\FPL.exe
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\obj\Release\FPL.pdb
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Release\FPL.exe
+E:\Documents and Settings\Mike\My Documents\Visual Studio 2008\Projects\FPL\FPL\bin\Release\FPL.pdb

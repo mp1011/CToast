@@ -1,0 +1,15 @@
+@ident(x)-> x
+
+@runTest(x,y| x=y) -> "Pass"
+@runTest(x,y) -> "Fail"
+
+@test(1) -> @runTest(5 = @ident(5),true)
+@test(2) -> @runTest([1,2,3] = @makeRange(1,3),true)
+@test(3) -> @runTest([] = t:[1],true)
+@test(4) -> @runTest(4 = @ident(5),false)
+@test(5) -> @runTest([1,2,3,4] = @makeRange(1,3),false)
+@test(6) -> @runTest([3] = t:[1],false)
+@test(7) -> @runTest([1,2,3] = @makeRange(1,4),false)
+
+@runTests() -> @map(@test,@makeRange(1,7))
+

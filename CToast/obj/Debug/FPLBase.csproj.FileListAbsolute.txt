@@ -1,0 +1,4 @@
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FLPBase\bin\Debug\FPLBase.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FLPBase\bin\Debug\FPLBase.pdb
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FLPBase\obj\Debug\FPLBase.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FLPBase\obj\Debug\FPLBase.pdb

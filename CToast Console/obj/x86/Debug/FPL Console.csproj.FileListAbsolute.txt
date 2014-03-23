@@ -1,0 +1,7 @@
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL Console\bin\Debug\FPL Console.exe
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL Console\bin\Debug\FPL Console.pdb
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL Console\obj\x86\Debug\FPL Console.exe
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL Console\obj\x86\Debug\FPL Console.pdb
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL Console\bin\Debug\FPLBase.dll
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL Console\bin\Debug\FPLBase.pdb
+C:\Users\Miko\Documents\Visual Studio 2008\Projects\FPL\FPL Console\obj\x86\Debug\FPL Console.csprojResolveAssemblyReference.cache

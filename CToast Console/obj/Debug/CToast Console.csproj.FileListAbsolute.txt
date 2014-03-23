@@ -1,0 +1,7 @@
+C:\Users\Miko\Documents\GitHub\CToast\CToast Console\bin\Debug\FPL Console.exe
+C:\Users\Miko\Documents\GitHub\CToast\CToast Console\bin\Debug\FPL Console.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToast Console\bin\Debug\CToast.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Console\bin\Debug\CToast.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToast Console\obj\Debug\CToast Console.csprojResolveAssemblyReference.cache
+C:\Users\Miko\Documents\GitHub\CToast\CToast Console\obj\Debug\FPL Console.exe
+C:\Users\Miko\Documents\GitHub\CToast\CToast Console\obj\Debug\FPL Console.pdb
