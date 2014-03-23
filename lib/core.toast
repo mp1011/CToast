@@ -5,8 +5,6 @@
 @filter(@pred, list | @pred(h:list)) -> h:list & @filter(@pred, t:list)
 @filter(@pred,list) -> @filter(@pred,t:list)
 
-@call(@fun,arg) -> @fun(arg)
-
 @curry(seed,[]) -> seed
 @curry(seed, funcList) -> @curry(@call(h:funcList,seed),t:funcList)
 
@@ -14,8 +12,3 @@
 @fold(@func,list|t:list=[]) -> h:list
 @fold(@func,list) -> @fold(@func,@func(h:list,h:t:list) & t:t:list)
 
-@foldr(@func,[]) -> []
-@foldr(@func,list|t:list=[]) -> h:list
-@foldr(@func,list) -> @func(@foldr(@func,@superHead(list)),@last(list))
-
-@superHead(list) = @reverse(t:@reverse(list))

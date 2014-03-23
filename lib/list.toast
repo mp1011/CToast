@@ -22,5 +22,3 @@
 
 @max(list) -> @fold(@max,list)
 
-@elementAt(0,list) = 'list
-@elementAt(n,list) = @elementAt(n-1,list')
