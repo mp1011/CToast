@@ -104,6 +104,7 @@
     <Compile Include="TreeViewer.Designer.cs">
       <DependentUpon>TreeViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

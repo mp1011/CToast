@@ -2,3 +2,4 @@ C:\Users\Miko\Documents\GitHub\CToast\CToast\bin\Debug\CToast.dll
 C:\Users\Miko\Documents\GitHub\CToast\CToast\bin\Debug\CToast.pdb
 C:\Users\Miko\Documents\GitHub\CToast\CToast\obj\Debug\CToast.dll
 C:\Users\Miko\Documents\GitHub\CToast\CToast\obj\Debug\CToast.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToast\obj\Debug\CToast.csprojResolveAssemblyReference.cache

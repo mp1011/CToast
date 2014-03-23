@@ -53,50 +53,83 @@ namespace TreePainter_v3_1
     }
 
     class TextVisualTreeNode : VisualTreeNode
-    {
-        private Color enabledNodeBackColor = Color.Azure;
-        private Color enabledNodeForeColor = Color.Blue;
-        private Color disabledNodeBackColor = Color.LightGray;
-        private Color disabledNodeForeColor = Color.Snow;
-
+    {    
         public string Text { get; set; }
-        public Color BackColor { get; set; }
-        public Color TextColor { get; set; }
+
+        public Color BorderColor { get; private set; }
+        public Color BackColor { get; private set; }
+        public Color TextColor { get; private set; }
+        private bool mCircleBorder = false;
         public Font Font { get; set; }
         public override bool IsBlank { get { return this.Text == "<<IGNORE ME>>"; } }
 
-        public override int XPadding { get { return 50; } }
-        public override int YPadding { get { return 50; } }
+        public override int XPadding { get { return 20; } }
+        public override int YPadding { get { return 30; } }
 
         public TextVisualTreeNode(TreeNode source, Font nodeFont) : base(source)
         {
             //labelAux.Name = nodeToPaint.Name;
             this.Font = nodeFont;
-            this.Text = source.Text;
+            this.Text = source.Text.TrimStart('@');
 
-            // Drawing Style
-            if (this.IsBlank) 
-            {   // Current node is auxiliar.
-                this.BackColor = this.disabledNodeBackColor;
-                this.TextColor = this.disabledNodeForeColor;
+            if (this.Text.StartsWith("anon", StringComparison.InvariantCultureIgnoreCase))
+                this.Text = "@";
+
+            if (this.Text.Equals( "a->", StringComparison.InvariantCultureIgnoreCase))
+                this.Text = "->";
+
+            bool isAtomic=true;
+            foreach(TreeNode child in source.Nodes)
+            {
+                if(child.Text != "<<IGNORE ME>>")
+                {
+                    isAtomic =false;
+                    break;
+                }
+            }
+
+            if (source.Text.StartsWith("@"))
+            {
+                BorderColor = Color.Black;
+                BackColor = Color.LightGreen;
+                TextColor = Color.Black;
+            }
+            else if(isAtomic)
+            {
+                BorderColor = Color.DarkGreen;
+                BackColor = Color.White;
+                TextColor = Color.Blue;
+                mCircleBorder = true;
             }
             else
-            {   // Current node contains valid data.
-                this.BackColor = this.enabledNodeBackColor;
-                this.TextColor = this.enabledNodeForeColor;
+            {
+                BorderColor = Color.Black;
+                BackColor = Color.LightYellow;
+                TextColor = Color.Black;
             }
 
-            // Calculating Node Position.
-            this.Area = new Rectangle(0, 0, 100, 50);
+            var size = System.Windows.Forms.TextRenderer.MeasureText(this.Text, this.Font, new Size(1000, 50), TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
+            this.Area = new Rectangle(0, 0, size.Width, size.Height);
         }
 
         public override void Paint(Graphics graphics, PaintSettings paintSettings)
         {
+            if (mCircleBorder)
+            {
+                graphics.FillEllipse(paintSettings.GetSolidBrush(this.BackColor), this.Area);
+                graphics.DrawEllipse(paintSettings.GetPen(this.BorderColor,1.0f), this.Area);
+            }
+            else
+            {
+                graphics.FillRoundedRectangle(paintSettings.GetSolidBrush(this.BackColor), this.Area, 4);
+                graphics.DrawRoundedRectangle(paintSettings.GetPen(this.BorderColor, 1.0f), this.Area, 4);
+            }
+
             StringFormat format = StringFormat.GenericTypographic;
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Near;
+            graphics.DrawString(this.Text, this.Font, paintSettings.GetSolidBrush(this.TextColor), this.Area, format);
 
-            graphics.DrawString(this.Text, this.Font, paintSettings.GetSolidBrush(Color.Black), this.Area, format);
         }
     }
 
@@ -104,8 +137,12 @@ namespace TreePainter_v3_1
     {
         public Color OutlineColor { get; set; }
         public Color FillColor { get; set; }
+        public Color TextColor { get; set; }
+
         public int Radius { get; set; }
 
+        private string mText;
+        private Font mFont = new Font("Arial", 10f, FontStyle.Regular);
         private bool mBlank;
         public override bool IsBlank
         {
@@ -133,7 +170,14 @@ namespace TreePainter_v3_1
 
             Int64 intValue;
             if (Int64.TryParse(source.Text, out intValue))
-                FillColor = Color.Green;
+            {
+                mText = source.Text;
+                FillColor = Color.White;
+                TextColor = Color.DarkBlue;
+
+                var size = System.Windows.Forms.TextRenderer.MeasureText(mText,mFont, new Size(1000, 50), TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
+                this.Area = new Rectangle(0, 0, size.Width, size.Height);
+            }
             else if (source.Text.StartsWith("@", StringComparison.InvariantCulture))
                 FillColor = Color.Blue;
             else if ("+-/*".IndexOf(source.Text) >= 0)
@@ -143,13 +187,29 @@ namespace TreePainter_v3_1
             else
                 FillColor = Color.Red;
 
+
+
+
            
         }
 
         public override void Paint(Graphics graphics, PaintSettings paintSettings)
         {
-            graphics.FillEllipse(paintSettings.GetSolidBrush(FillColor), this.Area);
-            graphics.DrawEllipse(paintSettings.GetPen(OutlineColor,1.0f), this.Area);
+            if (mText != null)
+            {
+                graphics.FillEllipse(paintSettings.GetSolidBrush(this.FillColor), this.Area);
+                graphics.DrawEllipse(paintSettings.GetPen(this.OutlineColor, 1.0f), this.Area);
+
+                StringFormat format = StringFormat.GenericTypographic;
+                format.Alignment = StringAlignment.Center;
+                format.LineAlignment = StringAlignment.Near;
+                graphics.DrawString(mText, mFont, paintSettings.GetSolidBrush(this.TextColor), this.Area, format);
+            }
+            else
+            {
+                graphics.FillEllipse(paintSettings.GetSolidBrush(FillColor), this.Area);
+                graphics.DrawEllipse(paintSettings.GetPen(OutlineColor, 1.0f), this.Area);
+            }
         }
     }
 
@@ -177,7 +237,8 @@ namespace TreePainter_v3_1
                     int minTop = Nodes.Min(p => p.Area.Top);
                     int maxBottom = Nodes.Max(p => p.Area.Bottom);
 
-                    mBounds = new Rectangle(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
+                    int pad = 4;
+                    mBounds = new Rectangle(minLeft, minTop, (maxRight - minLeft)+pad, (maxBottom - minTop)+4);
                 }
 
                 return mBounds;
