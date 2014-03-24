@@ -43,6 +43,8 @@
             this.pgeFile = new System.Windows.Forms.TabPage();
             this.btnRenderTextTrees = new System.Windows.Forms.Button();
             this.btnRenderColorTrees = new System.Windows.Forms.Button();
+            this.pgeSunburst = new System.Windows.Forms.TabPage();
+            this.pnlSunburst = new System.Windows.Forms.Panel();
             this.txtInput = new System.Windows.Forms.TextBox();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.chkShowSelectors = new System.Windows.Forms.CheckBox();
@@ -63,6 +65,7 @@
             this.pgeText.SuspendLayout();
             this.pgeColorTree.SuspendLayout();
             this.pgeFile.SuspendLayout();
+            this.pgeSunburst.SuspendLayout();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbSteps)).BeginInit();
             this.pnlBottom.SuspendLayout();
@@ -76,6 +79,7 @@
             this.tabDisplay.Controls.Add(this.pgeTree);
             this.tabDisplay.Controls.Add(this.pgeText);
             this.tabDisplay.Controls.Add(this.pgeColorTree);
+            this.tabDisplay.Controls.Add(this.pgeSunburst);
             this.tabDisplay.Controls.Add(this.pgeFile);
             this.tabDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabDisplay.Location = new System.Drawing.Point(0, 104);
@@ -216,6 +220,26 @@
             this.btnRenderColorTrees.Text = "Render as Color Trees";
             this.btnRenderColorTrees.UseVisualStyleBackColor = true;
             this.btnRenderColorTrees.Click += new System.EventHandler(this.btnRenderColorTrees_Click);
+            // 
+            // pgeSunburst
+            // 
+            this.pgeSunburst.Controls.Add(this.pnlSunburst);
+            this.pgeSunburst.Location = new System.Drawing.Point(4, 22);
+            this.pgeSunburst.Name = "pgeSunburst";
+            this.pgeSunburst.Padding = new System.Windows.Forms.Padding(3);
+            this.pgeSunburst.Size = new System.Drawing.Size(975, 338);
+            this.pgeSunburst.TabIndex = 6;
+            this.pgeSunburst.Text = "Sunburst";
+            this.pgeSunburst.UseVisualStyleBackColor = true;
+            // 
+            // pnlSunburst
+            // 
+            this.pnlSunburst.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlSunburst.Location = new System.Drawing.Point(3, 3);
+            this.pnlSunburst.Name = "pnlSunburst";
+            this.pnlSunburst.Size = new System.Drawing.Size(969, 332);
+            this.pnlSunburst.TabIndex = 0;
+            this.pnlSunburst.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSunburst_Paint);
             // 
             // txtInput
             // 
@@ -384,6 +408,7 @@
             this.pgeText.PerformLayout();
             this.pgeColorTree.ResumeLayout(false);
             this.pgeFile.ResumeLayout(false);
+            this.pgeSunburst.ResumeLayout(false);
             this.pnlTop.ResumeLayout(false);
             this.pnlTop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbSteps)).EndInit();
@@ -424,5 +449,7 @@
         private System.Windows.Forms.Panel pnlImgColorTree;
         private System.Windows.Forms.Button btnRenderColorTrees;
         private System.Windows.Forms.Button btnRenderTextTrees;
+        private System.Windows.Forms.TabPage pgeSunburst;
+        private System.Windows.Forms.Panel pnlSunburst;
     }
 }

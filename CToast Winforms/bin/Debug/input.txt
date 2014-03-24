@@ -1,1 +1,1 @@
-@fib2()
+@naturalNumbers()

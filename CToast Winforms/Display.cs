@@ -6,6 +6,7 @@ using System.Drawing;
 using GraphSharp;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace CToast
 {
@@ -495,6 +496,103 @@ namespace CToast
             TreeRenderer<TreeView> treeView = new TreeViewRendererAlternate(null);
             return TreePainter_v3_1.TreeRender.RenderSingleTreeAsColorTree(treeView.Render(root));            
         }
+    }
+
+    class SunburstRenderer : TreeRenderer<Bitmap>
+    {
+        private Panel mPanel;
+
+        public SunburstRenderer(Panel panel, Action<Node, Bitmap> act) : base(act) 
+        {
+            mPanel = panel;
+        }
+
+        private float mPenWidth = 10f;
+        protected override Bitmap RenderNode(Node root)
+        {
+                     
+            var bmp = new Bitmap((int)(mPanel.Width * .7), (int)(mPanel.Height * .7));
+            var center = new Point(bmp.Width / 2, bmp.Height / 2);
+            var rec = new Rectangle(center.X - 10, center.Y - 10, 20, 20);
+            var graphics = Graphics.FromImage(bmp);
+
+            PaintNode(root, graphics, 1, 1,0,360,rec);
+
+            return bmp;
+        }
+
+        private Rectangle GetNextRec(Rectangle rec)
+        {
+           return new Rectangle((int)(rec.X - mPenWidth), (int)(rec.Y - mPenWidth), (int)(rec.Width + (mPenWidth * 2)), (int)(rec.Height + (mPenWidth * 2)));    
+        }
+
+        private void PaintNode(Node node, Graphics g, int nodeIndex, int nodeCount, int parentAngleStart, int parentAngleSweep, Rectangle parentRec)
+        {            
+            var rec = GetNextRec(parentRec);
+            
+            var nodeSweep = parentAngleSweep / nodeCount;
+            var nodeStart = parentAngleStart + (nodeSweep * nodeIndex);
+
+            Color c = Color.White;
+            var op = node.TypedValue<Operator>(null);
+
+            if (node.IsAtomic)
+                c = Color.White;
+            else if (op != null)
+            {
+                if (op is PlusOperator || op is MinusOperator || op is TimesOperator || op is DivisionOperator || op is ModOperator)
+                    c = Color.LightGreen;
+                else if (op is CommaOperator || op is ConcatOperator || op is OpenBracketOperator)
+                    c = Color.LightYellow;
+                else if (op is FunctionCallOperator)
+                    c = Color.Orange;
+            }
+            else
+                c = Color.LightBlue;
+
+            PaintArc(g, c, rec, nodeStart, nodeSweep);
+     
+
+            if (node.LeftNode != null && node.RightNode != null)
+            {
+                PaintNode(node.LeftNode, g, 0, 2, nodeStart, nodeSweep, rec);
+                PaintNode(node.RightNode, g, 1, 2, nodeStart, nodeSweep, rec);
+            }
+            else if (node.LeftNode != null)
+            {
+                PaintNode(node.LeftNode, g, 0, 1, nodeStart, nodeSweep, rec);
+            }
+            else if (node.RightNode != null)
+            {
+                PaintNode(node.RightNode, g, 1, 1, nodeStart, nodeSweep, rec);
+            }
+
+        }
+
+        private void PaintArc(Graphics g, Color c, Rectangle rec, int start, int sweep)
+        {
+            var rec2 = new Rectangle((int)(rec.X - mPenWidth),(int)(rec.Y -mPenWidth), (int)(rec.Width + (mPenWidth *2)),(int)(rec.Height + (mPenWidth *2)));
+    
+            var path = new GraphicsPath();
+
+            path.StartFigure();
+
+            path.AddArc(rec, start, sweep);
+
+            int start2 = start + sweep;
+            while (start2 >= 360)
+                start2 -= 360;
+
+            path.AddArc(rec2, start2, -sweep);
+            path.CloseFigure();
+            g.FillPath(new SolidBrush(c), path);
+            g.DrawPath(new Pen(Color.Black,1f), path);
+
+            
+
+            
+        }
+       
     }
 }
 

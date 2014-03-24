@@ -27,6 +27,7 @@ namespace CToast
             pgeText.Tag = new SyntaxRenderer((n, t) => textBox1.Text = t);
             pgeFile.Tag = new NullRenderer();
             pgeColorTree.Tag = new ColorTreeRenderer((n, img) => { mRenderedBitmap = img; pnlImgColorTree.Refresh(); });
+            pgeSunburst.Tag = new SunburstRenderer(pnlSunburst, (n, img) => { mRenderedBitmap = img; pnlSunburst.Refresh(); });
         }
 
         #region Controls
@@ -184,6 +185,11 @@ namespace CToast
             PaintPanel(pnlImage, e.Graphics);
         }
 
+        private void pnlSunburst_Paint(object sender, PaintEventArgs e)
+        {
+            PaintPanel(pnlSunburst, e.Graphics);
+        }
+
         private void PaintPanel(Panel panel, Graphics g)
         {
             if(mRenderedBitmap == null)
@@ -201,6 +207,7 @@ namespace CToast
 
             g.DrawImage(mRenderedBitmap, destRec);
         }
+
 
         private void btnRenderColorTrees_Click(object sender, EventArgs e)
         {
@@ -228,6 +235,8 @@ namespace CToast
 
 
         #endregion
+
+      
 
      
  
