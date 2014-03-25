@@ -1,3 +1,0 @@
-@map(@func, []) -> []
-@map(@func, list) -> @func(h:list) , @map(@func,t:list)
-@apply(@func,value) -> @func(value)
