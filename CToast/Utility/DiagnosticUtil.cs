@@ -11,17 +11,17 @@ namespace CToast
 
         public static void Trace(Context context, params string[] args)
         {
-            if (context.IsImportingLibraries)
-                return;
+            //if (context.IsImportingLibraries)
+            //    return;
 
-            if (!mReady)
-            {
-                mReady = true;
-                System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener("diagnostic.csv"));
-            }
+            //if (!mReady)
+            //{
+            //    mReady = true;
+            //    System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener("diagnostic.csv"));
+            //}
 
-            System.Diagnostics.Trace.WriteLine(DateTime.Now.Ticks + "," + String.Join(",", args.Select(p => @"""" + p.Replace(@"""", "'") + @"""")));
-            System.Diagnostics.Trace.Flush();
+            //System.Diagnostics.Trace.WriteLine(DateTime.Now.Ticks + "," + String.Join(",", args.Select(p => @"""" + p.Replace(@"""", "'") + @"""")));
+            //System.Diagnostics.Trace.Flush();
         }
 
     }

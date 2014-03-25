@@ -28,6 +28,8 @@ namespace CToast
             pgeFile.Tag = new NullRenderer();
             pgeColorTree.Tag = new ColorTreeRenderer((n, img) => { mRenderedBitmap = img; pnlImgColorTree.Refresh(); });
             pgeSunburst.Tag = new SunburstRenderer(pnlSunburst, (n, img) => { mRenderedBitmap = img; pnlSunburst.Refresh(); });
+            pgeRadialTree.Tag = new RadialTreeRenderer(pnlRadialTree, (n, img) => { mRenderedBitmap = img; pnlRadialTree.Refresh(); });
+         
         }
 
         #region Controls
@@ -190,6 +192,11 @@ namespace CToast
             PaintPanel(pnlSunburst, e.Graphics);
         }
 
+        private void pnlRadialTree_Paint(object sender, PaintEventArgs e)
+        {
+            PaintPanel(pnlRadialTree, e.Graphics);
+        }
+
         private void PaintPanel(Panel panel, Graphics g)
         {
             if(mRenderedBitmap == null)
@@ -219,6 +226,30 @@ namespace CToast
             RenderToFiles(TreePainter_v3_1.TreeRender.RenderTreesAsTextTrees);
         }
 
+        private void btnRenderSunbursts_Click(object sender, EventArgs e)
+        {
+            RenderToFiles(pgeSunburst.Tag as SunburstRenderer);
+        }
+
+        private void btnRenderRadialTrees_Click(object sender, EventArgs e)
+        {
+            RenderToFiles(pgeRadialTree.Tag as RadialTreeRenderer);
+        }
+
+        private void RenderToFiles(TreeRenderer<Bitmap> renderer)
+        {
+            string folder = PathHelper.CreateOutputFolder();
+            System.IO.Directory.CreateDirectory(folder);
+
+            var treeRenderer = new TreeViewRendererAlternate(null);
+            var trees = mCurrentEvaluation.Steps.Select(p => treeRenderer.Render(p)).ToArray();
+
+            int i = 0;
+            foreach (var image in mCurrentEvaluation.Steps.Select(p => renderer.Render(p)))
+                image.Save(folder + "\\" + (++i).ToString("00000") + ".png", System.Drawing.Imaging.ImageFormat.Png);
+
+        }
+
         private void RenderToFiles(Func<TreeView[],IEnumerable<Bitmap>> paintFunction)
         {
             string folder = PathHelper.CreateOutputFolder();
@@ -235,14 +266,6 @@ namespace CToast
 
 
         #endregion
-
-      
-
-     
- 
-
-
-
 
 
     }

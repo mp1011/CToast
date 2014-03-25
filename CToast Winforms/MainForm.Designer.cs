@@ -40,11 +40,14 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.pgeColorTree = new System.Windows.Forms.TabPage();
             this.pnlImgColorTree = new System.Windows.Forms.Panel();
-            this.pgeFile = new System.Windows.Forms.TabPage();
-            this.btnRenderTextTrees = new System.Windows.Forms.Button();
-            this.btnRenderColorTrees = new System.Windows.Forms.Button();
             this.pgeSunburst = new System.Windows.Forms.TabPage();
             this.pnlSunburst = new System.Windows.Forms.Panel();
+            this.pgeRadialTree = new System.Windows.Forms.TabPage();
+            this.pnlRadialTree = new System.Windows.Forms.Panel();
+            this.pgeFile = new System.Windows.Forms.TabPage();
+            this.btnRenderSunbursts = new System.Windows.Forms.Button();
+            this.btnRenderTextTrees = new System.Windows.Forms.Button();
+            this.btnRenderColorTrees = new System.Windows.Forms.Button();
             this.txtInput = new System.Windows.Forms.TextBox();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.chkShowSelectors = new System.Windows.Forms.CheckBox();
@@ -58,14 +61,16 @@
             this.worker = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.tbDisplayedStep = new System.Windows.Forms.TrackBar();
+            this.btnRenderRadialTrees = new System.Windows.Forms.Button();
             this.tabDisplay.SuspendLayout();
             this.pgeGraph.SuspendLayout();
             this.pgeImage.SuspendLayout();
             this.pgeTree.SuspendLayout();
             this.pgeText.SuspendLayout();
             this.pgeColorTree.SuspendLayout();
-            this.pgeFile.SuspendLayout();
             this.pgeSunburst.SuspendLayout();
+            this.pgeRadialTree.SuspendLayout();
+            this.pgeFile.SuspendLayout();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbSteps)).BeginInit();
             this.pnlBottom.SuspendLayout();
@@ -80,6 +85,7 @@
             this.tabDisplay.Controls.Add(this.pgeText);
             this.tabDisplay.Controls.Add(this.pgeColorTree);
             this.tabDisplay.Controls.Add(this.pgeSunburst);
+            this.tabDisplay.Controls.Add(this.pgeRadialTree);
             this.tabDisplay.Controls.Add(this.pgeFile);
             this.tabDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabDisplay.Location = new System.Drawing.Point(0, 104);
@@ -189,8 +195,50 @@
             this.pnlImgColorTree.TabIndex = 1;
             this.pnlImgColorTree.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlImgColorTree_Paint);
             // 
+            // pgeSunburst
+            // 
+            this.pgeSunburst.Controls.Add(this.pnlSunburst);
+            this.pgeSunburst.Location = new System.Drawing.Point(4, 22);
+            this.pgeSunburst.Name = "pgeSunburst";
+            this.pgeSunburst.Padding = new System.Windows.Forms.Padding(3);
+            this.pgeSunburst.Size = new System.Drawing.Size(975, 338);
+            this.pgeSunburst.TabIndex = 6;
+            this.pgeSunburst.Text = "Sunburst";
+            this.pgeSunburst.UseVisualStyleBackColor = true;
+            // 
+            // pnlSunburst
+            // 
+            this.pnlSunburst.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlSunburst.Location = new System.Drawing.Point(3, 3);
+            this.pnlSunburst.Name = "pnlSunburst";
+            this.pnlSunburst.Size = new System.Drawing.Size(969, 332);
+            this.pnlSunburst.TabIndex = 0;
+            this.pnlSunburst.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSunburst_Paint);
+            // 
+            // pgeRadialTree
+            // 
+            this.pgeRadialTree.Controls.Add(this.pnlRadialTree);
+            this.pgeRadialTree.Location = new System.Drawing.Point(4, 22);
+            this.pgeRadialTree.Name = "pgeRadialTree";
+            this.pgeRadialTree.Padding = new System.Windows.Forms.Padding(3);
+            this.pgeRadialTree.Size = new System.Drawing.Size(975, 338);
+            this.pgeRadialTree.TabIndex = 7;
+            this.pgeRadialTree.Text = "Radial Tree";
+            this.pgeRadialTree.UseVisualStyleBackColor = true;
+            // 
+            // pnlRadialTree
+            // 
+            this.pnlRadialTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlRadialTree.Location = new System.Drawing.Point(3, 3);
+            this.pnlRadialTree.Name = "pnlRadialTree";
+            this.pnlRadialTree.Size = new System.Drawing.Size(969, 332);
+            this.pnlRadialTree.TabIndex = 0;
+            this.pnlRadialTree.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlRadialTree_Paint);
+            // 
             // pgeFile
             // 
+            this.pgeFile.Controls.Add(this.btnRenderRadialTrees);
+            this.pgeFile.Controls.Add(this.btnRenderSunbursts);
             this.pgeFile.Controls.Add(this.btnRenderTextTrees);
             this.pgeFile.Controls.Add(this.btnRenderColorTrees);
             this.pgeFile.Location = new System.Drawing.Point(4, 22);
@@ -200,6 +248,16 @@
             this.pgeFile.TabIndex = 4;
             this.pgeFile.Text = "File";
             this.pgeFile.UseVisualStyleBackColor = true;
+            // 
+            // btnRenderSunbursts
+            // 
+            this.btnRenderSunbursts.Location = new System.Drawing.Point(11, 95);
+            this.btnRenderSunbursts.Name = "btnRenderSunbursts";
+            this.btnRenderSunbursts.Size = new System.Drawing.Size(158, 32);
+            this.btnRenderSunbursts.TabIndex = 2;
+            this.btnRenderSunbursts.Text = "Render as Sunbursts";
+            this.btnRenderSunbursts.UseVisualStyleBackColor = true;
+            this.btnRenderSunbursts.Click += new System.EventHandler(this.btnRenderSunbursts_Click);
             // 
             // btnRenderTextTrees
             // 
@@ -220,26 +278,6 @@
             this.btnRenderColorTrees.Text = "Render as Color Trees";
             this.btnRenderColorTrees.UseVisualStyleBackColor = true;
             this.btnRenderColorTrees.Click += new System.EventHandler(this.btnRenderColorTrees_Click);
-            // 
-            // pgeSunburst
-            // 
-            this.pgeSunburst.Controls.Add(this.pnlSunburst);
-            this.pgeSunburst.Location = new System.Drawing.Point(4, 22);
-            this.pgeSunburst.Name = "pgeSunburst";
-            this.pgeSunburst.Padding = new System.Windows.Forms.Padding(3);
-            this.pgeSunburst.Size = new System.Drawing.Size(975, 338);
-            this.pgeSunburst.TabIndex = 6;
-            this.pgeSunburst.Text = "Sunburst";
-            this.pgeSunburst.UseVisualStyleBackColor = true;
-            // 
-            // pnlSunburst
-            // 
-            this.pnlSunburst.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlSunburst.Location = new System.Drawing.Point(3, 3);
-            this.pnlSunburst.Name = "pnlSunburst";
-            this.pnlSunburst.Size = new System.Drawing.Size(969, 332);
-            this.pnlSunburst.TabIndex = 0;
-            this.pnlSunburst.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSunburst_Paint);
             // 
             // txtInput
             // 
@@ -390,6 +428,16 @@
             this.tbDisplayedStep.TabIndex = 0;
             this.tbDisplayedStep.Scroll += new System.EventHandler(this.tbDisplayedStep_Scroll);
             // 
+            // btnRenderRadialTrees
+            // 
+            this.btnRenderRadialTrees.Location = new System.Drawing.Point(11, 133);
+            this.btnRenderRadialTrees.Name = "btnRenderRadialTrees";
+            this.btnRenderRadialTrees.Size = new System.Drawing.Size(158, 32);
+            this.btnRenderRadialTrees.TabIndex = 3;
+            this.btnRenderRadialTrees.Text = "Render as Radial Trees";
+            this.btnRenderRadialTrees.UseVisualStyleBackColor = true;
+            this.btnRenderRadialTrees.Click += new System.EventHandler(this.btnRenderRadialTrees_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -407,8 +455,9 @@
             this.pgeText.ResumeLayout(false);
             this.pgeText.PerformLayout();
             this.pgeColorTree.ResumeLayout(false);
-            this.pgeFile.ResumeLayout(false);
             this.pgeSunburst.ResumeLayout(false);
+            this.pgeRadialTree.ResumeLayout(false);
+            this.pgeFile.ResumeLayout(false);
             this.pnlTop.ResumeLayout(false);
             this.pnlTop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbSteps)).EndInit();
@@ -451,5 +500,9 @@
         private System.Windows.Forms.Button btnRenderTextTrees;
         private System.Windows.Forms.TabPage pgeSunburst;
         private System.Windows.Forms.Panel pnlSunburst;
+        private System.Windows.Forms.Button btnRenderSunbursts;
+        private System.Windows.Forms.TabPage pgeRadialTree;
+        private System.Windows.Forms.Panel pnlRadialTree;
+        private System.Windows.Forms.Button btnRenderRadialTrees;
     }
 }

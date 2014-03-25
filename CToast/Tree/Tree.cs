@@ -34,6 +34,52 @@ namespace CToast
             }
         }
 
+        private int mDepthUnsafe = -1;
+        /// <summary>
+        /// Returns the depth of the tree at this node. This value is cached and not recalculated.
+        /// </summary>
+        public int DepthUnsafe
+        {
+            get
+            {
+                if (mDepthUnsafe == -1)
+                {
+                    int depth = 1;
+                    if (this.LeftNode != null && this.RightNode != null)
+                        depth += Math.Max(this.LeftNode.DepthUnsafe, this.RightNode.DepthUnsafe);
+                    else if (this.LeftNode != null)
+                        depth += this.LeftNode.DepthUnsafe;
+                    else if (this.RightNode != null)
+                        depth += this.RightNode.DepthUnsafe;
+
+                    mDepthUnsafe = depth;
+                }
+
+                return mDepthUnsafe;
+            }
+        }
+
+        private int mTreeeSizeUnsafe = -1;
+        /// <summary>
+        /// Returns the total number of child nodes. This value is cached and not recalculated so it will be wrong if this tree has changed.
+        /// </summary>
+        public int TreeeSizeUnsafe
+        {
+            get
+            {
+                if (mTreeeSizeUnsafe == -1)
+                {
+                    mTreeeSizeUnsafe = 1;
+                    if (this.LeftNode != null)
+                        mTreeeSizeUnsafe += this.LeftNode.TreeeSizeUnsafe;
+                    if (this.RightNode != null)
+                        mTreeeSizeUnsafe +=  this.RightNode.TreeeSizeUnsafe;
+                }
+
+                return mTreeeSizeUnsafe;
+            }
+        }
+
         protected Node() 
         {
             Id = IdGenerator.NextId();

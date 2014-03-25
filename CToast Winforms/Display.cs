@@ -507,7 +507,7 @@ namespace CToast
             mPanel = panel;
         }
 
-        private float mPenWidth = 10f;
+        private float mPenWidth = 5f;
         protected override Bitmap RenderNode(Node root)
         {
                      
@@ -516,7 +516,7 @@ namespace CToast
             var rec = new Rectangle(center.X - 10, center.Y - 10, 20, 20);
             var graphics = Graphics.FromImage(bmp);
 
-            PaintNode(root, graphics, 1, 1,0,360,rec);
+            PaintNode(0, root, graphics, 1f, 0, true,0, 360, rec);
 
             return bmp;
         }
@@ -526,45 +526,77 @@ namespace CToast
            return new Rectangle((int)(rec.X - mPenWidth), (int)(rec.Y - mPenWidth), (int)(rec.Width + (mPenWidth * 2)), (int)(rec.Height + (mPenWidth * 2)));    
         }
 
-        private void PaintNode(Node node, Graphics g, int nodeIndex, int nodeCount, int parentAngleStart, int parentAngleSweep, Rectangle parentRec)
+       
+        private void PaintNode(int level, Node node, Graphics g, float firstPercent, int nodeIndex, bool isLeft, int parentAngleStart, int parentAngleSweep, Rectangle parentRec)
         {            
             var rec = GetNextRec(parentRec);
-            
-            var nodeSweep = parentAngleSweep / nodeCount;
-            var nodeStart = parentAngleStart + (nodeSweep * nodeIndex);
 
+            int nodeStart, nodeSweep;
+
+            if (nodeIndex == 0)
+            {
+                nodeStart = parentAngleStart;
+                nodeSweep = (int)(parentAngleSweep * firstPercent);
+            }
+            else
+            {
+                nodeStart = parentAngleStart + ((int)(parentAngleSweep * firstPercent));
+                nodeSweep = (int)(parentAngleSweep * (1-firstPercent));
+            }
+
+        
             Color c = Color.White;
+            Color c2 = Color.Black; 
+
             var op = node.TypedValue<Operator>(null);
 
             if (node.IsAtomic)
-                c = Color.White;
-            else if (op != null)
             {
-                if (op is PlusOperator || op is MinusOperator || op is TimesOperator || op is DivisionOperator || op is ModOperator)
-                    c = Color.LightGreen;
-                else if (op is CommaOperator || op is ConcatOperator || op is OpenBracketOperator)
-                    c = Color.LightYellow;
-                else if (op is FunctionCallOperator)
-                    c = Color.Orange;
+                c = Color.Gold;
+            }
+            else if (isLeft)
+            {
+                c = Color.Pink;
+                c2 = Color.DarkRed;
             }
             else
+            {
                 c = Color.LightBlue;
+                c2 = Color.DarkBlue;
+            }
+
+            float pct = .05f * level;
+            while (pct > 1)
+                pct -= 1f;
+
+            c = Util.FadeColor(c, c2, pct);
 
             PaintArc(g, c, rec, nodeStart, nodeSweep);
      
 
             if (node.LeftNode != null && node.RightNode != null)
             {
-                PaintNode(node.LeftNode, g, 0, 2, nodeStart, nodeSweep, rec);
-                PaintNode(node.RightNode, g, 1, 2, nodeStart, nodeSweep, rec);
+                var count1 = node.LeftNode.TreeeSizeUnsafe;
+                var count2 = node.RightNode.TreeeSizeUnsafe;
+
+                var pct1 = (float)count1 / (float)(count1 + count2);
+
+                float limit = .1f;
+                if (pct < limit)
+                    pct = limit;
+                if (pct > 1 - limit)
+                    pct = 1 - limit;
+                
+                PaintNode(level+1, node.LeftNode, g, pct1,0,true, nodeStart, nodeSweep, rec);
+                PaintNode(level + 1, node.RightNode, g, pct1, 1,false, nodeStart, nodeSweep, rec);
             }
             else if (node.LeftNode != null)
             {
-                PaintNode(node.LeftNode, g, 0, 1, nodeStart, nodeSweep, rec);
+                PaintNode(level + 1, node.LeftNode, g, 1, 0,true, nodeStart, nodeSweep, rec);
             }
             else if (node.RightNode != null)
             {
-                PaintNode(node.RightNode, g, 1, 1, nodeStart, nodeSweep, rec);
+                PaintNode(level + 1, node.RightNode, g, 1, 0, false, nodeStart, nodeSweep, rec);
             }
 
         }
@@ -587,13 +619,146 @@ namespace CToast
             path.CloseFigure();
             g.FillPath(new SolidBrush(c), path);
             g.DrawPath(new Pen(Color.Black,1f), path);
-
-            
-
-            
         }
        
     }
+
+
+    class RadialTreeRenderer : TreeRenderer<Bitmap>
+    {
+         private Panel mPanel;
+
+         public RadialTreeRenderer(Panel panel, Action<Node, Bitmap> act)
+             : base(act) 
+        {
+            mPanel = panel;
+        }
+
+
+         protected override Bitmap RenderNode(Node root)
+         {
+
+             List<int> levelRadiuses = new List<int>();
+             levelRadiuses.Add(30);
+             levelRadiuses.Add(20);
+             levelRadiuses.Add(10);
+             levelRadiuses.Add(8);
+             while(levelRadiuses.Count < root.DepthUnsafe)
+                 levelRadiuses.Add(8);
+
+             
+             var bmp = new Bitmap(mPanel.Width,mPanel.Height);
+             var g=  Graphics.FromImage(bmp);
+
+             Point center = new Point(mPanel.Width / 2, mPanel.Height / 2);
+
+             DrawNode(g, center,center, 0, levelRadiuses, 0, true, root);
+             DrawChildNodes(g, center,center, 0, levelRadiuses, 0, 360, root,true);
+
+             DrawNode(g, center,center, 0, levelRadiuses, 0, false, root);
+             DrawChildNodes(g, center, center, 0, levelRadiuses, 0, 360, root, false);
+
+
+             return bmp;
+         }
+
+         private void DrawChildNodes(Graphics g, Point center, Point thisNodeLocation, int level, List<int> levelRadiuses, int parentRangeStart, int parentRangeSweep, Node node, bool drawLine)
+         {
+
+             if (node.LeftNode != null && node.RightNode != null)
+             {
+                 var count1 = node.LeftNode.TreeeSizeUnsafe;
+                 var count2 = node.RightNode.TreeeSizeUnsafe;
+
+                 var pct1 = (float)count1 / (float)(count1 + count2);
+
+                 var limit = .1f;
+                 if (pct1 < limit)
+                     pct1 = limit;
+                 else if (pct1 > 1 - limit)
+                     pct1 = 1 - limit;
+
+                 int leftStart = parentRangeStart;
+                 int leftSweep = (int)(parentRangeSweep * pct1);
+
+                 int rightStart = leftStart + leftSweep;
+                 int rightSweep = (int)(parentRangeSweep * (1 - pct1));
+
+                 var leftLoc = DrawNode(g, center,thisNodeLocation, level + 1, levelRadiuses, leftStart + (leftSweep / 2), drawLine, node.LeftNode);
+                 DrawChildNodes(g, center, leftLoc, level + 1, levelRadiuses, leftStart, leftSweep, node.LeftNode, drawLine);
+
+                 var rightLoc = DrawNode(g, center, thisNodeLocation, level + 1, levelRadiuses, rightStart + (rightSweep / 2), drawLine, node.RightNode);
+                 DrawChildNodes(g, center, rightLoc, level + 1, levelRadiuses, rightStart, rightSweep, node.RightNode, drawLine);             
+             }
+             else if (node.LeftNode != null)
+             {
+                 int leftStart = parentRangeStart;
+                 int leftSweep =parentRangeSweep;
+
+                 var leftLoc = DrawNode(g, center,thisNodeLocation, level + 1, levelRadiuses, leftStart + (leftSweep / 2), drawLine, node.LeftNode);
+                 DrawChildNodes(g, center, leftLoc, level + 1, levelRadiuses, leftStart, leftSweep, node.LeftNode, drawLine);
+             }
+             else if (node.RightNode != null)
+             {
+                 int rightStart = parentRangeStart;
+                 int rightSweep = parentRangeSweep;
+
+                 var rightLoc = DrawNode(g, center, thisNodeLocation, level + 1, levelRadiuses, rightStart + (rightSweep / 2), drawLine, node.RightNode);
+                 DrawChildNodes(g, center, rightLoc, level + 1, levelRadiuses, rightStart, rightSweep, node.RightNode, drawLine);
+             }
+         }
+
+         private Point DrawNode(Graphics g, Point center, Point parentLocation, int level, List<int> levelRadiuses, int degree, bool drawLine, Node node)
+         {
+
+             while (degree >= 360)
+                 degree -= 360;
+
+             int distanceFromCenter = 0;
+             if (level > 0)
+                 distanceFromCenter = levelRadiuses[0] + (levelRadiuses.Skip(1).Take(level - 1).Sum() * 2) + levelRadiuses[level];
+
+             var radius = levelRadiuses[level];
+
+             Point location = center;
+             Point offset = Util.AngleToXY(degree, distanceFromCenter);
+             var textRec = new Rectangle((location.X + offset.X) - radius, (location.Y + offset.Y) - radius, radius * 2, radius * 2);
+
+             var brush = new SolidBrush(Color.DarkBlue);
+              var font = new Font("Arial", 9f, FontStyle.Regular);
+             var format = StringFormat.GenericTypographic;
+             format.Alignment = StringAlignment.Center;
+             format.LineAlignment = StringAlignment.Center;
+             format.FormatFlags = StringFormatFlags.NoWrap;
+             
+             var thisCenter = new Point(textRec.X + (textRec.Width / 2), textRec.Y + (textRec.Height / 2));
+
+             if (drawLine)
+             {
+                 g.DrawLine(new Pen(Color.Black, 2f), thisCenter, parentLocation);
+             }
+             else
+             {
+                 var color = Util.FadeColor(Color.LightBlue, Color.DarkBlue, (float)level / (float)levelRadiuses.Count);
+                 g.FillEllipse(new SolidBrush(color), textRec);
+
+                 color = Util.FadeColor(Color.LightGreen, Color.DarkGreen,  (float)level / (float)levelRadiuses.Count);
+                 g.DrawEllipse(new Pen(color,2f), textRec);
+                 g.DrawEllipse(new Pen(Color.Black,1f), textRec);
+
+                 if(node.Value != null)
+                     g.DrawString(node.Value.ToString(), font, new SolidBrush(Color.White), textRec, format);
+                
+             }
+             return thisCenter;
+     
+         }
+
+
+           
+
+    }
+
 }
 
 

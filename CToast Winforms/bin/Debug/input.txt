@@ -1,1 +1,1 @@
-@naturalNumbers()
+@mergeSort([4,1,3,2,10])

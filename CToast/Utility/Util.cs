@@ -34,6 +34,8 @@ namespace CToast
         {
             return node == null || node.IsEmptyList;
         }
+
+    
     }
 
     public static class PathHelper
