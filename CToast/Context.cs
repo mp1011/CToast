@@ -113,6 +113,9 @@ namespace CToast
 
         public Context(string library)
         {
+            if (String.IsNullOrEmpty(library))
+                library = "@import(main.toast)";
+
             BuiltinFunction_Import.Create(this);
             BuiltinFunction_DefineOperator.Create(this);
             this.SkipFunctionSelectors = true;

@@ -203,13 +203,13 @@ namespace CToast
                 return;
 
             var ratio = (float)mRenderedBitmap.Width / (float)mRenderedBitmap.Height ;
-            var destRec = new Rectangle(0, 0, (int)(pnlImage.Height * ratio), pnlImage.Height);
-            destRec.X = (pnlImage.Width - destRec.Width) / 2;
+            var destRec = new Rectangle(0, 0, (int)(panel.Height * ratio), panel.Height);
+            destRec.X = (panel.Width - destRec.Width) / 2;
 
-            if (destRec.Width > pnlImage.Width)
+            if (destRec.Width > panel.Width)
             {
                 ratio = (float)mRenderedBitmap.Height / (float)mRenderedBitmap.Width;
-                destRec = new Rectangle(0, 0, pnlImage.Width, (int)(pnlImage.Width * ratio));             
+                destRec = new Rectangle(0, 0, panel.Width, (int)(panel.Width * ratio));             
             }
 
             g.DrawImage(mRenderedBitmap, destRec);

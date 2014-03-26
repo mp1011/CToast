@@ -652,6 +652,20 @@ namespace CToast
 
              Point center = new Point(mPanel.Width / 2, mPanel.Height / 2);
 
+             for (int i = root.DepthUnsafe; i > 0; i--)
+             {
+                 var r = levelRadiuses[0] + (levelRadiuses.Skip(1).Take(i).Sum() * 2);
+
+                 var rec = new Rectangle(center.X - r, center.Y - r, (r * 2),(r * 2));
+                 Color clr;
+                 if ((i % 2) == 0)
+                     clr = Util.FadeColor(Color.Red, Color.White, (float)i / (float)root.DepthUnsafe);
+                 else
+                     clr = Util.FadeColor(Color.Pink, Color.White, (float)i / (float)root.DepthUnsafe);
+
+                 g.FillEllipse(new SolidBrush(clr), rec);
+             }
+
              DrawNode(g, center,center, 0, levelRadiuses, 0, true, root);
              DrawChildNodes(g, center,center, 0, levelRadiuses, 0, 360, root,true);
 
