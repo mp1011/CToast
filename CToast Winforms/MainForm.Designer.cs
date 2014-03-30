@@ -28,28 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabDisplay = new System.Windows.Forms.TabControl();
             this.pgeGraph = new System.Windows.Forms.TabPage();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.graphControl1 = new CToast.GraphControl();
             this.pgeImage = new System.Windows.Forms.TabPage();
-            this.pnlImage = new System.Windows.Forms.Panel();
+            this.imgTree = new KaiwaProjects.KpImageViewer();
             this.pgeTree = new System.Windows.Forms.TabPage();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.pgeText = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.pgeColorTree = new System.Windows.Forms.TabPage();
-            this.pnlImgColorTree = new System.Windows.Forms.Panel();
+            this.imgColorTree = new KaiwaProjects.KpImageViewer();
             this.pgeSunburst = new System.Windows.Forms.TabPage();
-            this.pnlSunburst = new System.Windows.Forms.Panel();
+            this.imgSunburst = new KaiwaProjects.KpImageViewer();
             this.pgeRadialTree = new System.Windows.Forms.TabPage();
-            this.pnlRadialTree = new System.Windows.Forms.Panel();
+            this.imgRadialTree = new KaiwaProjects.KpImageViewer();
             this.pgeFile = new System.Windows.Forms.TabPage();
+            this.btnRenderRadialTrees = new System.Windows.Forms.Button();
             this.btnRenderSunbursts = new System.Windows.Forms.Button();
             this.btnRenderTextTrees = new System.Windows.Forms.Button();
             this.btnRenderColorTrees = new System.Windows.Forms.Button();
-            this.txtInput = new System.Windows.Forms.TextBox();
             this.pnlTop = new System.Windows.Forms.Panel();
+            this.txtInput = new System.Windows.Forms.ComboBox();
             this.chkShowSelectors = new System.Windows.Forms.CheckBox();
             this.btnRestart = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -60,8 +62,11 @@
             this.btnEvaluate = new System.Windows.Forms.Button();
             this.worker = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.btnAnimate = new System.Windows.Forms.Button();
             this.tbDisplayedStep = new System.Windows.Forms.TrackBar();
-            this.btnRenderRadialTrees = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.pgeTriangles = new System.Windows.Forms.TabPage();
+            this.imgTriangles = new KaiwaProjects.KpImageViewer();
             this.tabDisplay.SuspendLayout();
             this.pgeGraph.SuspendLayout();
             this.pgeImage.SuspendLayout();
@@ -75,6 +80,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbSteps)).BeginInit();
             this.pnlBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbDisplayedStep)).BeginInit();
+            this.pgeTriangles.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabDisplay
@@ -86,6 +92,7 @@
             this.tabDisplay.Controls.Add(this.pgeColorTree);
             this.tabDisplay.Controls.Add(this.pgeSunburst);
             this.tabDisplay.Controls.Add(this.pgeRadialTree);
+            this.tabDisplay.Controls.Add(this.pgeTriangles);
             this.tabDisplay.Controls.Add(this.pgeFile);
             this.tabDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabDisplay.Location = new System.Drawing.Point(0, 104);
@@ -119,7 +126,7 @@
             // 
             // pgeImage
             // 
-            this.pgeImage.Controls.Add(this.pnlImage);
+            this.pgeImage.Controls.Add(this.imgTree);
             this.pgeImage.Location = new System.Drawing.Point(4, 22);
             this.pgeImage.Name = "pgeImage";
             this.pgeImage.Padding = new System.Windows.Forms.Padding(3);
@@ -128,14 +135,33 @@
             this.pgeImage.Text = "Image";
             this.pgeImage.UseVisualStyleBackColor = true;
             // 
-            // pnlImage
+            // imgTree
             // 
-            this.pnlImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlImage.Location = new System.Drawing.Point(3, 3);
-            this.pnlImage.Name = "pnlImage";
-            this.pnlImage.Size = new System.Drawing.Size(969, 332);
-            this.pnlImage.TabIndex = 0;
-            this.pnlImage.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlImage_Paint);
+            this.imgTree.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.imgTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imgTree.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.imgTree.GifAnimation = false;
+            this.imgTree.GifFPS = 15D;
+            this.imgTree.Image = null;
+            this.imgTree.Location = new System.Drawing.Point(3, 3);
+            this.imgTree.MenuColor = System.Drawing.Color.LightSteelBlue;
+            this.imgTree.MenuPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgTree.MinimumSize = new System.Drawing.Size(454, 157);
+            this.imgTree.Name = "imgTree";
+            this.imgTree.NavigationPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgTree.NavigationTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgTree.OpenButton = false;
+            this.imgTree.PreviewButton = false;
+            this.imgTree.PreviewPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgTree.PreviewText = "Preview";
+            this.imgTree.PreviewTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgTree.Rotation = 0;
+            this.imgTree.Scrollbars = false;
+            this.imgTree.ShowPreview = true;
+            this.imgTree.Size = new System.Drawing.Size(969, 332);
+            this.imgTree.TabIndex = 0;
+            this.imgTree.TextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgTree.Zoom = 100D;
             // 
             // pgeTree
             // 
@@ -177,7 +203,7 @@
             // 
             // pgeColorTree
             // 
-            this.pgeColorTree.Controls.Add(this.pnlImgColorTree);
+            this.pgeColorTree.Controls.Add(this.imgColorTree);
             this.pgeColorTree.Location = new System.Drawing.Point(4, 22);
             this.pgeColorTree.Name = "pgeColorTree";
             this.pgeColorTree.Padding = new System.Windows.Forms.Padding(3);
@@ -186,18 +212,37 @@
             this.pgeColorTree.Text = "Color Tree";
             this.pgeColorTree.UseVisualStyleBackColor = true;
             // 
-            // pnlImgColorTree
+            // imgColorTree
             // 
-            this.pnlImgColorTree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlImgColorTree.Location = new System.Drawing.Point(3, 3);
-            this.pnlImgColorTree.Name = "pnlImgColorTree";
-            this.pnlImgColorTree.Size = new System.Drawing.Size(969, 332);
-            this.pnlImgColorTree.TabIndex = 1;
-            this.pnlImgColorTree.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlImgColorTree_Paint);
+            this.imgColorTree.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.imgColorTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imgColorTree.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.imgColorTree.GifAnimation = false;
+            this.imgColorTree.GifFPS = 15D;
+            this.imgColorTree.Image = null;
+            this.imgColorTree.Location = new System.Drawing.Point(3, 3);
+            this.imgColorTree.MenuColor = System.Drawing.Color.LightSteelBlue;
+            this.imgColorTree.MenuPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgColorTree.MinimumSize = new System.Drawing.Size(454, 157);
+            this.imgColorTree.Name = "imgColorTree";
+            this.imgColorTree.NavigationPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgColorTree.NavigationTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgColorTree.OpenButton = false;
+            this.imgColorTree.PreviewButton = false;
+            this.imgColorTree.PreviewPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgColorTree.PreviewText = "Preview";
+            this.imgColorTree.PreviewTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgColorTree.Rotation = 0;
+            this.imgColorTree.Scrollbars = false;
+            this.imgColorTree.ShowPreview = true;
+            this.imgColorTree.Size = new System.Drawing.Size(969, 332);
+            this.imgColorTree.TabIndex = 0;
+            this.imgColorTree.TextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgColorTree.Zoom = 100D;
             // 
             // pgeSunburst
             // 
-            this.pgeSunburst.Controls.Add(this.pnlSunburst);
+            this.pgeSunburst.Controls.Add(this.imgSunburst);
             this.pgeSunburst.Location = new System.Drawing.Point(4, 22);
             this.pgeSunburst.Name = "pgeSunburst";
             this.pgeSunburst.Padding = new System.Windows.Forms.Padding(3);
@@ -206,18 +251,37 @@
             this.pgeSunburst.Text = "Sunburst";
             this.pgeSunburst.UseVisualStyleBackColor = true;
             // 
-            // pnlSunburst
+            // imgSunburst
             // 
-            this.pnlSunburst.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlSunburst.Location = new System.Drawing.Point(3, 3);
-            this.pnlSunburst.Name = "pnlSunburst";
-            this.pnlSunburst.Size = new System.Drawing.Size(969, 332);
-            this.pnlSunburst.TabIndex = 0;
-            this.pnlSunburst.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSunburst_Paint);
+            this.imgSunburst.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.imgSunburst.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imgSunburst.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.imgSunburst.GifAnimation = false;
+            this.imgSunburst.GifFPS = 15D;
+            this.imgSunburst.Image = null;
+            this.imgSunburst.Location = new System.Drawing.Point(3, 3);
+            this.imgSunburst.MenuColor = System.Drawing.Color.LightSteelBlue;
+            this.imgSunburst.MenuPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgSunburst.MinimumSize = new System.Drawing.Size(454, 157);
+            this.imgSunburst.Name = "imgSunburst";
+            this.imgSunburst.NavigationPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgSunburst.NavigationTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgSunburst.OpenButton = false;
+            this.imgSunburst.PreviewButton = false;
+            this.imgSunburst.PreviewPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgSunburst.PreviewText = "Preview";
+            this.imgSunburst.PreviewTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgSunburst.Rotation = 0;
+            this.imgSunburst.Scrollbars = false;
+            this.imgSunburst.ShowPreview = true;
+            this.imgSunburst.Size = new System.Drawing.Size(969, 332);
+            this.imgSunburst.TabIndex = 1;
+            this.imgSunburst.TextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgSunburst.Zoom = 100D;
             // 
             // pgeRadialTree
             // 
-            this.pgeRadialTree.Controls.Add(this.pnlRadialTree);
+            this.pgeRadialTree.Controls.Add(this.imgRadialTree);
             this.pgeRadialTree.Location = new System.Drawing.Point(4, 22);
             this.pgeRadialTree.Name = "pgeRadialTree";
             this.pgeRadialTree.Padding = new System.Windows.Forms.Padding(3);
@@ -226,14 +290,33 @@
             this.pgeRadialTree.Text = "Radial Tree";
             this.pgeRadialTree.UseVisualStyleBackColor = true;
             // 
-            // pnlRadialTree
+            // imgRadialTree
             // 
-            this.pnlRadialTree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlRadialTree.Location = new System.Drawing.Point(3, 3);
-            this.pnlRadialTree.Name = "pnlRadialTree";
-            this.pnlRadialTree.Size = new System.Drawing.Size(969, 332);
-            this.pnlRadialTree.TabIndex = 0;
-            this.pnlRadialTree.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlRadialTree_Paint);
+            this.imgRadialTree.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.imgRadialTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imgRadialTree.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.imgRadialTree.GifAnimation = false;
+            this.imgRadialTree.GifFPS = 15D;
+            this.imgRadialTree.Image = null;
+            this.imgRadialTree.Location = new System.Drawing.Point(3, 3);
+            this.imgRadialTree.MenuColor = System.Drawing.Color.LightSteelBlue;
+            this.imgRadialTree.MenuPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgRadialTree.MinimumSize = new System.Drawing.Size(454, 157);
+            this.imgRadialTree.Name = "imgRadialTree";
+            this.imgRadialTree.NavigationPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgRadialTree.NavigationTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgRadialTree.OpenButton = false;
+            this.imgRadialTree.PreviewButton = false;
+            this.imgRadialTree.PreviewPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgRadialTree.PreviewText = "Preview";
+            this.imgRadialTree.PreviewTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgRadialTree.Rotation = 0;
+            this.imgRadialTree.Scrollbars = false;
+            this.imgRadialTree.ShowPreview = true;
+            this.imgRadialTree.Size = new System.Drawing.Size(969, 332);
+            this.imgRadialTree.TabIndex = 1;
+            this.imgRadialTree.TextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgRadialTree.Zoom = 100D;
             // 
             // pgeFile
             // 
@@ -248,6 +331,16 @@
             this.pgeFile.TabIndex = 4;
             this.pgeFile.Text = "File";
             this.pgeFile.UseVisualStyleBackColor = true;
+            // 
+            // btnRenderRadialTrees
+            // 
+            this.btnRenderRadialTrees.Location = new System.Drawing.Point(11, 133);
+            this.btnRenderRadialTrees.Name = "btnRenderRadialTrees";
+            this.btnRenderRadialTrees.Size = new System.Drawing.Size(158, 32);
+            this.btnRenderRadialTrees.TabIndex = 3;
+            this.btnRenderRadialTrees.Text = "Render as Radial Trees";
+            this.btnRenderRadialTrees.UseVisualStyleBackColor = true;
+            this.btnRenderRadialTrees.Click += new System.EventHandler(this.btnRenderRadialTrees_Click);
             // 
             // btnRenderSunbursts
             // 
@@ -279,18 +372,9 @@
             this.btnRenderColorTrees.UseVisualStyleBackColor = true;
             this.btnRenderColorTrees.Click += new System.EventHandler(this.btnRenderColorTrees_Click);
             // 
-            // txtInput
-            // 
-            this.txtInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtInput.Location = new System.Drawing.Point(14, 17);
-            this.txtInput.Name = "txtInput";
-            this.txtInput.Size = new System.Drawing.Size(846, 26);
-            this.txtInput.TabIndex = 1;
-            // 
             // pnlTop
             // 
+            this.pnlTop.Controls.Add(this.txtInput);
             this.pnlTop.Controls.Add(this.chkShowSelectors);
             this.pnlTop.Controls.Add(this.btnRestart);
             this.pnlTop.Controls.Add(this.label1);
@@ -299,12 +383,21 @@
             this.pnlTop.Controls.Add(this.lblProgress);
             this.pnlTop.Controls.Add(this.chkPause);
             this.pnlTop.Controls.Add(this.btnEvaluate);
-            this.pnlTop.Controls.Add(this.txtInput);
             this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTop.Location = new System.Drawing.Point(0, 0);
             this.pnlTop.Name = "pnlTop";
             this.pnlTop.Size = new System.Drawing.Size(983, 104);
             this.pnlTop.TabIndex = 2;
+            // 
+            // txtInput
+            // 
+            this.txtInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtInput.FormattingEnabled = true;
+            this.txtInput.Location = new System.Drawing.Point(15, 18);
+            this.txtInput.Name = "txtInput";
+            this.txtInput.Size = new System.Drawing.Size(839, 21);
+            this.txtInput.TabIndex = 11;
             // 
             // chkShowSelectors
             // 
@@ -411,12 +504,23 @@
             // 
             // pnlBottom
             // 
+            this.pnlBottom.Controls.Add(this.btnAnimate);
             this.pnlBottom.Controls.Add(this.tbDisplayedStep);
             this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlBottom.Location = new System.Drawing.Point(0, 468);
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(983, 67);
             this.pnlBottom.TabIndex = 10;
+            // 
+            // btnAnimate
+            // 
+            this.btnAnimate.Location = new System.Drawing.Point(15, 32);
+            this.btnAnimate.Name = "btnAnimate";
+            this.btnAnimate.Size = new System.Drawing.Size(86, 23);
+            this.btnAnimate.TabIndex = 1;
+            this.btnAnimate.Text = "Animate";
+            this.btnAnimate.UseVisualStyleBackColor = true;
+            this.btnAnimate.Click += new System.EventHandler(this.btnAnimate_Click);
             // 
             // tbDisplayedStep
             // 
@@ -428,15 +532,48 @@
             this.tbDisplayedStep.TabIndex = 0;
             this.tbDisplayedStep.Scroll += new System.EventHandler(this.tbDisplayedStep_Scroll);
             // 
-            // btnRenderRadialTrees
+            // timer1
             // 
-            this.btnRenderRadialTrees.Location = new System.Drawing.Point(11, 133);
-            this.btnRenderRadialTrees.Name = "btnRenderRadialTrees";
-            this.btnRenderRadialTrees.Size = new System.Drawing.Size(158, 32);
-            this.btnRenderRadialTrees.TabIndex = 3;
-            this.btnRenderRadialTrees.Text = "Render as Radial Trees";
-            this.btnRenderRadialTrees.UseVisualStyleBackColor = true;
-            this.btnRenderRadialTrees.Click += new System.EventHandler(this.btnRenderRadialTrees_Click);
+            this.timer1.Interval = 10;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // pgeTriangles
+            // 
+            this.pgeTriangles.Controls.Add(this.imgTriangles);
+            this.pgeTriangles.Location = new System.Drawing.Point(4, 22);
+            this.pgeTriangles.Name = "pgeTriangles";
+            this.pgeTriangles.Size = new System.Drawing.Size(975, 338);
+            this.pgeTriangles.TabIndex = 8;
+            this.pgeTriangles.Text = "Triangles";
+            this.pgeTriangles.UseVisualStyleBackColor = true;
+            // 
+            // imgTriangles
+            // 
+            this.imgTriangles.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.imgTriangles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imgTriangles.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.imgTriangles.GifAnimation = false;
+            this.imgTriangles.GifFPS = 15D;
+            this.imgTriangles.Image = null;
+            this.imgTriangles.Location = new System.Drawing.Point(0, 0);
+            this.imgTriangles.MenuColor = System.Drawing.Color.LightSteelBlue;
+            this.imgTriangles.MenuPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgTriangles.MinimumSize = new System.Drawing.Size(454, 157);
+            this.imgTriangles.Name = "imgTriangles";
+            this.imgTriangles.NavigationPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgTriangles.NavigationTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgTriangles.OpenButton = false;
+            this.imgTriangles.PreviewButton = false;
+            this.imgTriangles.PreviewPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgTriangles.PreviewText = "Preview";
+            this.imgTriangles.PreviewTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgTriangles.Rotation = 0;
+            this.imgTriangles.Scrollbars = false;
+            this.imgTriangles.ShowPreview = true;
+            this.imgTriangles.Size = new System.Drawing.Size(975, 338);
+            this.imgTriangles.TabIndex = 1;
+            this.imgTriangles.TextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgTriangles.Zoom = 100D;
             // 
             // MainForm
             // 
@@ -464,6 +601,7 @@
             this.pnlBottom.ResumeLayout(false);
             this.pnlBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbDisplayedStep)).EndInit();
+            this.pgeTriangles.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -475,7 +613,6 @@
         private System.Windows.Forms.TabPage pgeImage;
         private System.Windows.Forms.TabPage pgeTree;
         private System.Windows.Forms.TabPage pgeText;
-        private System.Windows.Forms.TextBox txtInput;
         private System.Windows.Forms.Panel pnlTop;
         private System.Windows.Forms.Button btnEvaluate;
         private System.ComponentModel.BackgroundWorker worker;
@@ -492,17 +629,22 @@
         private System.Windows.Forms.Panel pnlBottom;
         private System.Windows.Forms.TrackBar tbDisplayedStep;
         private System.Windows.Forms.CheckBox chkShowSelectors;
-        private System.Windows.Forms.Panel pnlImage;
         private System.Windows.Forms.TabPage pgeFile;
         private System.Windows.Forms.TabPage pgeColorTree;
-        private System.Windows.Forms.Panel pnlImgColorTree;
         private System.Windows.Forms.Button btnRenderColorTrees;
         private System.Windows.Forms.Button btnRenderTextTrees;
         private System.Windows.Forms.TabPage pgeSunburst;
-        private System.Windows.Forms.Panel pnlSunburst;
         private System.Windows.Forms.Button btnRenderSunbursts;
         private System.Windows.Forms.TabPage pgeRadialTree;
-        private System.Windows.Forms.Panel pnlRadialTree;
         private System.Windows.Forms.Button btnRenderRadialTrees;
+        private KaiwaProjects.KpImageViewer imgTree;
+        private KaiwaProjects.KpImageViewer imgColorTree;
+        private KaiwaProjects.KpImageViewer imgSunburst;
+        private KaiwaProjects.KpImageViewer imgRadialTree;
+        private System.Windows.Forms.Button btnAnimate;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ComboBox txtInput;
+        private System.Windows.Forms.TabPage pgeTriangles;
+        private KaiwaProjects.KpImageViewer imgTriangles;
     }
 }

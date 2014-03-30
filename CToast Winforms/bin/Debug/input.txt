@@ -1,1 +1,4 @@
-@fib(20)
+@ack(3,2)
+@take(8, @fib2())
+@map(@fac, @take(10,@naturalNumbers()))
+@quickSort([10,4,6,1,9,12,3])

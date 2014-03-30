@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace CToast
 {
@@ -77,6 +78,62 @@ namespace CToast
         }
 
 
+        public static int GetPointDistance(Point pt1, Point pt2)
+        {
+            var x = pt1.X - pt2.X;
+            var y = pt1.Y - pt2.Y;
+
+            return (int)Math.Sqrt((x * x) + (y * y));
+        }
+
+        public static int GetLineAngle(Point source, Point target)
+        {
+            var a = (int)(GetLineAngleR(new PointF((float)source.X,(float)source.Y), new PointF((float)target.X,(float)target.Y)) * (180f / Math.PI));
+            while (a < 0)
+                a += 360;
+            while (a >= 360)
+                a -= 360;
+            return a;
+        }
+
+        /// <summary>
+        /// Returns the angle between the two points in radians
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        private static double GetLineAngleR(PointF source, PointF target)
+        {
+            double a, b;
+            double angle;
+
+            a = target.X - source.X;
+            b = target.Y - source.Y;
+
+            if (a == 0 && b == 0)
+                return 0;
+
+            angle = Math.Atan(Math.Abs(b) / Math.Abs(a));
+
+            if (a >= 0 && b >= 0)
+            {
+                angle *= -1;
+            }
+            else if (a < 0 && b >= 0)
+            {
+                angle += Math.PI;
+            }
+            else if (a >= 0 && b < 0)
+            {
+
+            }
+            else if (a < 0 && b < 0)
+            {
+                angle = Math.PI - angle;
+            }
+            return angle;
+
+        }
 
     }
 }

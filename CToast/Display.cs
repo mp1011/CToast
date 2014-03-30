@@ -7,53 +7,21 @@ using System.Threading.Tasks;
 
 namespace CToast
 {
-    public  interface ITreeRenderer
+
+    public abstract class TreeRenderer<T> //: ITreeRenderer 
     {
-        void Render(Node node);
-        Task RenderAsync(Node node);
-    }
-
-    public abstract class TreeRenderer<T> : ITreeRenderer 
-    {
-        private Action<Node,T> mOnRender;
-
-        protected TreeRenderer(Action<Node, T> onRender)
-        {
-            mOnRender = onRender;
-        }
-
-        protected TreeRenderer()
-        {
-        }
-
         public T Render(Node root)
         {
             var result = RenderNode(root);
-            if (mOnRender != null)
-                mOnRender(root,result);
             return result;
-        }
-
-        void ITreeRenderer.Render(Node root)
-        {
-            Render(root);
-        }
-
-        Task ITreeRenderer.RenderAsync(Node root)
-        {
-            return Task<T>.Factory.StartNew(() => this.RenderNode(root)).ContinueWith(t =>
-                {
-                    if (mOnRender != null)
-                        mOnRender(root, t.Result);
-                });
         }
 
         protected abstract T RenderNode(Node root);
     }
+
     public class SyntaxRenderer : TreeRenderer<string>
     {
-        public SyntaxRenderer(Action<Node,string> fn) : base(fn) { }
-        public SyntaxRenderer() { }
+         public SyntaxRenderer() { }
 
         protected override string RenderNode(Node root)
         {            

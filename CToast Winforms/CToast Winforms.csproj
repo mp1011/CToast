@@ -136,6 +136,10 @@
       <Project>{874DBC15-BE03-4F30-89B9-40AC5A0B025C}</Project>
       <Name>CToast</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KPImageViewer\KP-ImageViewerV2.csproj">
+      <Project>{68D11DDD-0081-4037-99D4-69B3AFCBDD8D}</Project>
+      <Name>KP-ImageViewerV2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TreePainter_v3_1\TreePainter_v3_1.csproj">
       <Project>{A021D213-47EA-441E-8168-BA118666FF08}</Project>
       <Name>TreePainter_v3_1</Name>

@@ -8,8 +8,8 @@
     <ProjectGuid>{157BC5E9-A0ED-4583-B637-F556555DCB72}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FPL_Console</RootNamespace>
-    <AssemblyName>FPL Console</AssemblyName>
+    <RootNamespace>CToastConsole</RootNamespace>
+    <AssemblyName>CToastConsole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>

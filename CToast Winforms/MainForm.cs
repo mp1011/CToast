@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading.Tasks;
+using TreePainter_v3_1;
 
 namespace CToast
 {
@@ -17,19 +19,28 @@ namespace CToast
         public MainForm()
         {
             InitializeComponent();
-            
-            if(System.IO.File.Exists("input.txt"))
-                txtInput.Text = System.IO.File.ReadAllText("input.txt");
-            
-            pgeGraph.Tag = new GraphSharpRenderer(graphControl1);
-            pgeImage.Tag = new ImageRenderer((n, img) => { mRenderedBitmap = img; pnlImage.Refresh(); });
-            pgeTree.Tag = new TreeViewRenderer(treeView1);
-            pgeText.Tag = new SyntaxRenderer((n, t) => textBox1.Text = t);
-            pgeFile.Tag = new NullRenderer();
-            pgeColorTree.Tag = new ColorTreeRenderer((n, img) => { mRenderedBitmap = img; pnlImgColorTree.Refresh(); });
-            pgeSunburst.Tag = new SunburstRenderer(pnlSunburst, (n, img) => { mRenderedBitmap = img; pnlSunburst.Refresh(); });
-            pgeRadialTree.Tag = new RadialTreeRenderer(pnlRadialTree, (n, img) => { mRenderedBitmap = img; pnlRadialTree.Refresh(); });
-         
+
+            if (System.IO.File.Exists("input.txt"))
+            {
+                foreach (var line in System.IO.File.ReadAllLines("input.txt"))
+                    txtInput.Items.Add(line);
+
+                if(txtInput.Items.Count > 0)
+                    txtInput.Text = txtInput.Items[txtInput.Items.Count - 1].ToString();
+            }
+
+            pgeGraph.Tag = new FormRendererHelper<GraphSharpViewModel> { Renderer = new GraphSharpRenderer(), AfterRenderAction = (a, n) => graphControl1.DataContext = a };
+
+            pgeImage.Tag = new FormRendererHelper<BitmapWithOrigin> { Renderer = new ImageRenderer(), AfterRenderAction = (a, n) => { imgTree.Image = a.Bitmap; } };
+            pgeTriangles.Tag = new FormRendererHelper<Bitmap> { Renderer = new TriangleTreeRenderer(), AfterRenderAction = (a, n) => { imgTriangles.Image = a; } };
+            pgeText.Tag = new FormRendererHelper<string> { Renderer = new SyntaxRenderer(), AfterRenderAction = (a, n) => { textBox1.Text = a; } };
+            pgeFile.Tag = new FormRendererHelper<bool> { Renderer = new NullRenderer(), NoAsync=true} ;
+            pgeColorTree.Tag = new FormRendererHelper<BitmapWithOrigin> { Renderer = new ColorTreeRenderer(), AfterRenderAction = (a, n) => { imgColorTree.Image = a.Bitmap; } };
+            pgeSunburst.Tag = new FormRendererHelper<Bitmap> { Renderer = new SunburstRenderer(imgSunburst), AfterRenderAction = (a, n) => { imgSunburst.Image = a; } };
+            pgeRadialTree.Tag = new FormRendererHelper<Bitmap> { Renderer = new RadialTreeRenderer(imgRadialTree), AfterRenderAction = (a, n) => { imgRadialTree.Image = a; } };
+
+            pgeTree.Tag = new FormRendererHelper<TreeView> {Renderer = new TreeViewRenderer(treeView1), NoAsync=true}; 
+   
         }
 
         #region Controls
@@ -107,8 +118,7 @@ namespace CToast
             tbDisplayedStep.Maximum = eval.TotalSteps;
             tbDisplayedStep.Value = tbDisplayedStep.Maximum;
 
-            this.RenderTree();
-            this.Refresh();
+            RenderTree();
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -125,11 +135,23 @@ namespace CToast
 
         private void BeginEvaluate()
         {
+            timer1.Enabled = false;
             lblProgress.Text = "Loading libraries...";
             this.Refresh();
 
-            System.IO.File.WriteAllText("input.txt", txtInput.Text);
-            var ctx = new Context(Environment.CommandLine);
+            var listItems = new List<string>();
+            foreach (var item in txtInput.Items)
+                listItems.Add(item.ToString());
+
+            if (!listItems.Contains(txtInput.Text))
+            {
+                txtInput.Items.Add(txtInput.Text);
+                listItems.Add(txtInput.Text);
+
+                System.IO.File.WriteAllLines("input.txt", listItems.Reverse<string>().Take(25).Reverse().ToArray());
+            }
+
+            var ctx = new Context(Environment.GetCommandLineArgs().Skip(1).LastOrDefault());
             mContext = ctx;
 
             ctx.IsImportingLibraries = true;
@@ -159,62 +181,61 @@ namespace CToast
 
         #region Rendering
 
-        private Image mRenderedBitmap;
 
-        private ITreeRenderer ActiveRenderer
+        private IFormRendererHelper ActiveRenderer
         {
             get
             {
-                return tabDisplay.SelectedTab.Tag as ITreeRenderer;
+                return tabDisplay.SelectedTab.Tag as IFormRendererHelper;
             }
         }
 
+        private bool mAlreadyRendering;
         private void RenderTree()
         {
             if (mCurrentEvaluation.TotalSteps == 0)
                 return;
 
-            ActiveRenderer.Render(mCurrentEvaluation.DisplayedNode);
-        }
-
-        private void pnlImgColorTree_Paint(object sender, PaintEventArgs e)
-        {
-            PaintPanel(pnlImgColorTree,e.Graphics);
-        }
-
-        private void pnlImage_Paint(object sender, PaintEventArgs e)
-        {
-            PaintPanel(pnlImage, e.Graphics);
-        }
-
-        private void pnlSunburst_Paint(object sender, PaintEventArgs e)
-        {
-            PaintPanel(pnlSunburst, e.Graphics);
-        }
-
-        private void pnlRadialTree_Paint(object sender, PaintEventArgs e)
-        {
-            PaintPanel(pnlRadialTree, e.Graphics);
-        }
-
-        private void PaintPanel(Panel panel, Graphics g)
-        {
-            if(mRenderedBitmap == null)
+            if (mAlreadyRendering)
                 return;
 
-            var ratio = (float)mRenderedBitmap.Width / (float)mRenderedBitmap.Height ;
-            var destRec = new Rectangle(0, 0, (int)(panel.Height * ratio), panel.Height);
-            destRec.X = (panel.Width - destRec.Width) / 2;
+            mAlreadyRendering = true;
 
-            if (destRec.Width > panel.Width)
+            ActiveRenderer.Tree = mCurrentEvaluation.DisplayedNode;
+
+            if (ActiveRenderer.NoAsync)
             {
-                ratio = (float)mRenderedBitmap.Height / (float)mRenderedBitmap.Width;
-                destRec = new Rectangle(0, 0, panel.Width, (int)(panel.Width * ratio));             
+                ActiveRenderer.CreateRendering();
+                ActiveRenderer.DisplayRendering();
+                mAlreadyRendering = false;
+                return;
             }
 
-            g.DrawImage(mRenderedBitmap, destRec);
+            Task<IFormRendererHelper>.Factory.StartNew((rendererObj) =>
+            {
+                IFormRendererHelper rdr = rendererObj as IFormRendererHelper;
+                rdr.CreateRendering();
+                return rdr;
+            }, this.ActiveRenderer).ContinueWith(task =>
+                {
+                    task.Result.DisplayRendering();
+                    mAlreadyRendering = false;
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+
         }
 
+        private void RenderTreeNoAsync()
+        {
+            if (mCurrentEvaluation.TotalSteps == 0)
+                return;
+
+            ActiveRenderer.Tree = mCurrentEvaluation.DisplayedNode;
+
+            ActiveRenderer.CreateRendering();
+            ActiveRenderer.DisplayRendering();
+            mAlreadyRendering = false;
+            return;
+        }
 
         private void btnRenderColorTrees_Click(object sender, EventArgs e)
         {
@@ -241,7 +262,7 @@ namespace CToast
             string folder = PathHelper.CreateOutputFolder();
             System.IO.Directory.CreateDirectory(folder);
 
-            var treeRenderer = new TreeViewRendererAlternate(null);
+            var treeRenderer = new TreeViewRendererAlternate();
             var trees = mCurrentEvaluation.Steps.Select(p => treeRenderer.Render(p)).ToArray();
 
             int i = 0;
@@ -255,7 +276,7 @@ namespace CToast
             string folder = PathHelper.CreateOutputFolder();
             System.IO.Directory.CreateDirectory(folder);
 
-            var treeRenderer = new TreeViewRendererAlternate(null);
+            var treeRenderer = new TreeViewRendererAlternate();
             var trees = mCurrentEvaluation.Steps.Select(p=> treeRenderer.Render(p)).ToArray();
 
             int i = 0;
@@ -267,6 +288,57 @@ namespace CToast
 
         #endregion
 
+        private void btnAnimate_Click(object sender, EventArgs e)
+        {
+            if (timer1.Enabled)
+                timer1.Enabled = false;
+            else
+            {
+                tbDisplayedStep.Value = 0;
+                timer1.Enabled = true;
+            }
+        }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (tbDisplayedStep.Value >= tbDisplayedStep.Maximum)
+                timer1.Enabled = false;
+            else
+            {
+                tbDisplayedStep.Value++;
+                mCurrentEvaluation.DisplayedStep = tbDisplayedStep.Value;
+                RenderTreeNoAsync();
+            }
+        }
+
+
+    }
+
+    interface IFormRendererHelper
+    {
+        void CreateRendering();
+        void DisplayRendering();
+        Node Tree { get;set;}
+        bool NoAsync { get; set; }
+    }
+
+    class FormRendererHelper<T> : IFormRendererHelper
+    {
+        private T mRendering;     
+        public Node Tree { get; set; }
+        public TreeRenderer<T> Renderer;
+        public Action<T, Node> AfterRenderAction;
+        public bool NoAsync { get; set; }
+
+        public void CreateRendering()
+        {
+            mRendering = Renderer.Render(Tree);            
+        }
+
+        public void DisplayRendering()
+        {
+            if(AfterRenderAction != null)
+                AfterRenderAction(mRendering, Tree);
+        }
     }
 }

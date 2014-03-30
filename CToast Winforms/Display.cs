@@ -7,6 +7,7 @@ using GraphSharp;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using TreePainter_v3_1;
 
 namespace CToast
 {
@@ -254,8 +255,6 @@ namespace CToast
 
     class GraphSharpRenderer : TreeRenderer<GraphSharpViewModel>
     {
-        public GraphSharpRenderer(GraphControl ctl) : base((n,x)=> ctl.DataContext = x){}
-
         protected override GraphSharpViewModel RenderNode(Node root)
         {
             return new GraphSharpViewModel(RenderGraph(root));
@@ -351,21 +350,8 @@ namespace CToast
         #endregion
     }
 
-    class TextBoxSyntaxRenderer : CToast.SyntaxRenderer
-    {
-
-        public TextBoxSyntaxRenderer(System.Windows.Forms.TextBox textBox) : base((n,str) => textBox.Text = str) { }
-
-    }
-
-
     class TreeViewRenderer : TreeRenderer<TreeView>
     {
-        public TreeViewRenderer(Action<Node, TreeView> onRender) : base(onRender) 
-        {
-            mTree = new TreeView();
-        }
-
         private TreeView mTree;
 
         public TreeViewRenderer()
@@ -373,9 +359,9 @@ namespace CToast
             mTree = new TreeView();
         }
 
-        public TreeViewRenderer(TreeView tree)
+        public TreeViewRenderer(TreeView treeView)
         {
-            mTree = tree;
+            mTree = treeView;
         }
 
         protected override TreeView RenderNode(Node root)
@@ -399,17 +385,11 @@ namespace CToast
         }
     }
 
-
     class TreeViewRendererAlternate : TreeRenderer<TreeView>
     {
-        public TreeViewRendererAlternate(Action<Node, TreeView> onRender) : base(onRender) 
-        {
-        }
-
         public TreeViewRendererAlternate()
         {
         }
-
      
         protected override TreeView RenderNode(Node root)
         {
@@ -417,8 +397,6 @@ namespace CToast
             AddNodes(tree.Nodes, root);
             return tree;
         }
-
-
 
         private void AddNodes(TreeNodeCollection treeNodes, Node node)
         {
@@ -473,45 +451,39 @@ namespace CToast
         }
     }
 
-
-    class ImageRenderer : TreeRenderer<Bitmap>
+    class ImageRenderer : TreeRenderer<BitmapWithOrigin>
     {
-        public ImageRenderer(Action<Node,Bitmap> act):base(act) { }
-
-
-        protected override Bitmap RenderNode(Node root)
+        protected override BitmapWithOrigin RenderNode(Node root)
         {
-            TreeRenderer<TreeView> treeView = new TreeViewRendererAlternate(null);
+            TreeRenderer<TreeView> treeView = new TreeViewRendererAlternate();
             return TreePainter_v3_1.TreeRender.RenderSingleTree(treeView.Render(root));            
         }
 
     }
 
-    class ColorTreeRenderer : TreeRenderer<Bitmap>
+    class ColorTreeRenderer : TreeRenderer<BitmapWithOrigin>
     {
-        public ColorTreeRenderer(Action<Node, Bitmap> act) : base(act) { }
-
-        protected override Bitmap RenderNode(Node root)
+        protected override BitmapWithOrigin RenderNode(Node root)
         {
-            TreeRenderer<TreeView> treeView = new TreeViewRendererAlternate(null);
+            TreeRenderer<TreeView> treeView = new TreeViewRendererAlternate();
             return TreePainter_v3_1.TreeRender.RenderSingleTreeAsColorTree(treeView.Render(root));            
         }
     }
 
     class SunburstRenderer : TreeRenderer<Bitmap>
     {
-        private Panel mPanel;
+        private Control mControl;
 
-        public SunburstRenderer(Panel panel, Action<Node, Bitmap> act) : base(act) 
+        public SunburstRenderer(Control ctl) 
         {
-            mPanel = panel;
+            mControl = ctl;
         }
 
         private float mPenWidth = 5f;
         protected override Bitmap RenderNode(Node root)
         {
-                     
-            var bmp = new Bitmap((int)(mPanel.Width * .7), (int)(mPanel.Height * .7));
+
+            var bmp = new Bitmap((int)(mControl.Width * .7), (int)(mControl.Height * .7));
             var center = new Point(bmp.Width / 2, bmp.Height / 2);
             var rec = new Rectangle(center.X - 10, center.Y - 10, 20, 20);
             var graphics = Graphics.FromImage(bmp);
@@ -623,15 +595,13 @@ namespace CToast
        
     }
 
-
     class RadialTreeRenderer : TreeRenderer<Bitmap>
     {
-         private Panel mPanel;
+       private Control mControl;
 
-         public RadialTreeRenderer(Panel panel, Action<Node, Bitmap> act)
-             : base(act) 
+       public RadialTreeRenderer(Control ctl) 
         {
-            mPanel = panel;
+            mControl = ctl;
         }
 
 
@@ -646,11 +616,11 @@ namespace CToast
              while(levelRadiuses.Count < root.DepthUnsafe)
                  levelRadiuses.Add(8);
 
-             
-             var bmp = new Bitmap(mPanel.Width,mPanel.Height);
+
+             var bmp = new Bitmap(mControl.Width, mControl.Height);
              var g=  Graphics.FromImage(bmp);
 
-             Point center = new Point(mPanel.Width / 2, mPanel.Height / 2);
+             Point center = new Point(mControl.Width / 2, mControl.Height / 2);
 
              for (int i = root.DepthUnsafe; i > 0; i--)
              {
@@ -773,6 +743,439 @@ namespace CToast
 
     }
 
+
+    class TriangleTreeRenderer : TreeRenderer<Bitmap>
+    {
+
+        public TriangleTreeRenderer() { }
+
+
+        class RelativePoint
+        {
+            public RelativePoint Parent { get; set; }
+
+            private int mAngle;
+            public int Angle
+            {
+                get
+                {
+                    return mAngle;
+                }
+                set
+                {
+                    int newAngle = value;
+                    while (newAngle < 0)
+                        newAngle += 360;
+                    while (newAngle >= 360)
+                        newAngle -= 360;
+
+                    mAngle = newAngle;
+                }
+            }
+            public int Distance { get; set; }
+
+            public Point Location
+            {
+                get; private set;
+            }
+
+            public void Move(int dx, int dy)
+            {
+                this.Location = new Point(this.Location.X + dx, this.Location.Y + dy);
+            }
+
+            public void CalcLocation()
+            {
+                if (Parent == null)
+                    return;
+
+                var offset = Util.AngleToXY(Angle, Distance);
+                this.Location = new Point(Parent.Location.X + (offset.X), Parent.Location.Y + (offset.Y));                
+            }
+        }
+
+        class TriangleGroup
+        {
+            public RelativePoint Top { get; set; }
+            public Node Node { get; set; }
+
+            public TriangleGroup LeftChild { get; set; }
+            public TriangleGroup RightChild { get; set; }
+
+            private RelativePoint mBottomLeft;
+            public RelativePoint BottomLeft
+            {
+                get
+                {
+                    if (LeftChild == null)
+                    {
+                        if (mBottomLeft == null)
+                        {
+                            mBottomLeft = new RelativePoint { Parent = this.Top, Distance = 4, Angle = 240 };
+                        }
+                        return mBottomLeft;
+                    }
+                    else
+                        return LeftChild.BottomLeft;
+                }
+            }
+
+            public Point TextPoint
+            {
+                get
+                {
+                    var pt = this.Top.Location;
+                    var angle = this.LeftAngle + (this.RightAngle - this.LeftAngle) / 2;
+
+                    while (angle > 360)
+                        angle -= 360;
+
+                    var offset = Util.AngleToXY(angle, 10);
+
+                    return new Point(pt.X + offset.X, pt.Y + offset.Y);
+                }
+            }
+
+            private RelativePoint mBottomRight;
+            public RelativePoint BottomRight
+            {
+                get
+                {
+                    if (RightChild == null)
+                    {
+                        if (mBottomRight == null)
+                        {
+                            mBottomRight = new RelativePoint { Parent = this.Top, Distance = 4, Angle = 300 };
+                        }
+                        return mBottomRight;
+                    }
+                    else
+                        return RightChild.BottomRight;
+                }
+            }
+
+            public void CalcLocation()
+            {
+                Top.CalcLocation();
+                if (LeftChild != null)
+                    LeftChild.CalcLocation();
+                else
+                    BottomLeft.CalcLocation();
+
+                if (RightChild != null)
+                    RightChild.CalcLocation();
+                else
+                    BottomRight.CalcLocation();
+            }
+
+            public void Move(int dx, int dy)
+            {
+                this.Top.Move(dx, dy);
+
+                this.CalcLocation();
+            }
+
+            private IEnumerable<RelativePoint> GetAllNodes()
+            {
+                yield return this.Top;
+                if (this.LeftChild != null)
+                {
+                    foreach (var node in LeftChild.GetAllNodes())
+                        yield return node;
+                }
+                else
+                    yield return this.BottomLeft;
+
+                if (this.RightChild != null)
+                {
+                    foreach (var node in RightChild.GetAllNodes())
+                        yield return node;
+                }
+                else
+                    yield return this.BottomRight;
+            }
+
+            public void Rotate(int angle, bool rotateHead)
+            {
+                if(rotateHead)
+                    this.Top.Angle += angle;
+
+                if (this.LeftChild != null)
+                    this.LeftChild.Rotate(angle,true);
+                else
+                    this.BottomLeft.Angle += angle;
+
+
+                if (this.RightChild != null)
+                    this.RightChild.Rotate(angle,true);
+                else
+                    this.BottomRight.Angle += angle;
+
+            }
+
+            public Rectangle Bounds
+            {
+                get
+                {
+                    var nodes = this.GetAllNodes().ToArray();
+
+                    var minX = nodes.Min(p => p.Location.X);
+                    var maxX = nodes.Max(p => p.Location.X);
+                    var minY = nodes.Min(p => p.Location.Y);
+                    var maxY = nodes.Max(p => p.Location.Y);
+
+                    return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+
+                    //var bottomLeft = new Point(this.BottomLeftNode.Area.Left, this.BottomLeftNode.Area.Bottom);
+                    //var bottomRight = new Point(this.BottomRightNode.Area.Right, this.BottomRightNode.Area.Bottom);
+                    //var topY = this.Root.Area.Y;
+
+                    //return new Rectangle(bottomLeft.X, topY, (bottomRight.X - bottomLeft.X), Math.Max(bottomLeft.Y,bottomRight.Y) - topY);
+                }
+            }
+
+
+            public int LeftAngle
+            {
+                get
+                {
+                    return Util.GetLineAngle(Top.Location, BottomLeft.Location);
+                }
+            }
+
+            public int RightAngle
+            {
+                get
+                {
+                    return Util.GetLineAngle(Top.Location, BottomRight.Location);
+                }
+            }
+
+
+        }
+
+        protected override Bitmap RenderNode(Node root)
+        {
+
+            int depth = root.DepthUnsafe;
+            var rootTriangle = NodeToTriangle(root, 1, depth);
+
+            FinalizePosition(rootTriangle);
+
+            var b = rootTriangle.Bounds;
+            rootTriangle.Move(100, 100);
+
+            if (b.Width <= 0 || b.Height <= 0)
+            {
+                var blank = new Bitmap(8, 8);
+                return blank;
+            }
+
+            var bmp = new Bitmap(rootTriangle.Bounds.Right + 50, rootTriangle.Bounds.Bottom + 50);
+            var g = Graphics.FromImage(bmp);
+
+            DrawTriangles(rootTriangle, g,false,0);
+          //  DrawLines(rootTriangle, g);
+          //  DrawText(rootTriangle, g, 0);
+
+            g.Dispose();
+
+            return bmp;
+        }
+
+        private Font mFont = new Font("Arial", 8f, FontStyle.Regular);
+
+        private void FinalizePosition(TriangleGroup triangle)
+        {
+            if (triangle.LeftChild != null)
+                FinalizePosition(triangle.LeftChild);
+
+            if (triangle.RightChild != null)
+                FinalizePosition(triangle.RightChild);
+
+            if (triangle.LeftChild != null && triangle.RightChild != null)
+            {
+                var angle = triangle.Top.Angle;
+
+                triangle.LeftChild.Rotate(angle - triangle.LeftChild.RightAngle, false);
+                triangle.RightChild.Rotate(angle - triangle.RightChild.LeftAngle, false);
+            }
+
+            triangle.CalcLocation();
+          
+        }
+
+        private TriangleGroup NodeToTriangle(Node n, int depth, int maxDepth)
+        {
+
+            var triangle = new TriangleGroup { Node = n };
+
+         //   var textSize = System.Windows.Forms.TextRenderer.MeasureText(n.Value.ToString(), mFont, new Size(1000, 50), TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
+
+        //    triangle.Root = new VisualNode { Node = n, Radius = (int)(textSize.Width * .5f) };
+            triangle.Top = new RelativePoint { Angle = 270, Distance = 20 };
+
+            TriangleGroup leftTriangle = null, rightTriangle = null;
+      
+            if (n.LeftNode != null)
+            {
+                leftTriangle = NodeToTriangle(n.LeftNode, depth+1,maxDepth);
+                leftTriangle.Top.Parent = triangle.Top;
+            }
+            else if (depth < maxDepth)
+            {
+                leftTriangle = PadTree(depth + 1, maxDepth);
+                leftTriangle.Top.Parent = triangle.Top;
+            }
+
+            if (n.RightNode != null)
+            {
+                rightTriangle = NodeToTriangle(n.RightNode,depth + 1, maxDepth);
+                rightTriangle.Top.Parent = triangle.Top;
+            }
+            else if (depth < maxDepth)
+            {
+                rightTriangle = PadTree(depth + 1, maxDepth);
+                rightTriangle.Top.Parent = triangle.Top;
+            }
+
+
+            triangle.LeftChild = leftTriangle;
+            triangle.RightChild = rightTriangle;
+
+            triangle.CalcLocation();
+
+            return triangle;
+        }
+
+        private TriangleGroup PadTree(int depth, int maxDepth)
+        {
+            var triangle = new TriangleGroup();
+            triangle.Top = new RelativePoint { Angle = 270, Distance = 20 };
+
+            TriangleGroup leftTriangle = null, rightTriangle = null;
+
+            if (depth < maxDepth)
+            {
+                leftTriangle = PadTree(depth + 1, maxDepth);
+                leftTriangle.Top.Parent = triangle.Top;
+            }
+
+            if (depth < maxDepth)
+            {
+                rightTriangle = PadTree(depth + 1, maxDepth);
+                rightTriangle.Top.Parent = triangle.Top;
+            }
+
+            triangle.LeftChild = leftTriangle;
+            triangle.RightChild = rightTriangle;
+
+            triangle.CalcLocation();
+
+            if(leftTriangle != null)
+                leftTriangle.Rotate(270 - leftTriangle.RightAngle, false);
+
+            if(rightTriangle != null)
+                rightTriangle.Rotate(270 - rightTriangle.LeftAngle, false);
+
+            return triangle;
+        }
+
+        private void DrawLines(TriangleGroup triangle, Graphics g)
+        {
+
+            var pen = new Pen(Color.Black);
+
+            if (triangle.LeftChild != null && triangle.LeftChild.Node != null)
+            {
+                g.DrawLine(pen, triangle.Top.Location, triangle.LeftChild.Top.Location);
+                g.DrawLine(pen, triangle.LeftChild.Top.Location, triangle.LeftChild.TextPoint);
+                DrawLines(triangle.LeftChild, g);
+            }
+
+            if (triangle.RightChild != null && triangle.RightChild.Node != null)
+            {
+                g.DrawLine(pen, triangle.Top.Location, triangle.RightChild.Top.Location);
+                g.DrawLine(pen, triangle.RightChild.Top.Location, triangle.RightChild.TextPoint);
+
+                DrawLines(triangle.RightChild, g);
+            }
+
+        }
+
+        private void DrawText(TriangleGroup triangle, Graphics g, int level)
+        {
+            if (triangle == null)
+                return;
+
+            var pen = new Pen(Color.Black);
+            var textBrush = new SolidBrush(Color.DarkBlue);
+
+            if (triangle.Node != null && triangle.Node.Value != null)
+            {
+                if (triangle.Node.IsAtomic)
+                {
+                    StringFormat format = StringFormat.GenericTypographic;
+                    format.Alignment = StringAlignment.Center;
+                    format.LineAlignment = StringAlignment.Center;
+                    format.FormatFlags = StringFormatFlags.NoWrap | StringFormatFlags.NoClip;
+                  //  g.DrawString(triangle.Node.Value.ToString(), this.mFont, textBrush, triangle.Top.Location, format);
+                }
+            }
+
+            DrawText(triangle.LeftChild, g, level + 1);
+            DrawText(triangle.RightChild, g, level + 1);
+        }
+
+        public static int DebugValue = -1;
+        private void DrawTriangles(TriangleGroup triangle, Graphics g, bool isLeft, int level)
+        {
+            if (triangle == null)
+                return;
+
+            var pen = new Pen(Color.Black);
+            var textBrush = new SolidBrush(Color.Blue);
+          
+            if (triangle.Node == null)
+            {
+              //  var brush = new SolidBrush(Util.FadeColor(Color.LightBlue, Color.DarkBlue, (level / 10f)));
+               // g.FillPolygon(brush, new Point[] { triangle.Top.Location, triangle.BottomLeft.Location, triangle.BottomRight.Location });
+               //   g.DrawPolygon(pen, new Point[] { triangle.Top.Location, triangle.BottomLeft.Location, triangle.BottomRight.Location });
+            }
+            else if (false)
+            {
+                Color[] c1 = new Color[] { Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Orange, Color.Purple, Color.ForestGreen,Color.Turquoise };
+                while (level >= c1.Length)
+                    level -= c1.Length;
+                var clr = c1[level];
+
+                if (DebugValue < 0 || DebugValue == level)
+                {
+                    var brush = new SolidBrush(Util.FadeColor(clr, clr, (level / 10f)));
+                    g.FillPolygon(brush, new Point[] { triangle.Top.Location, triangle.BottomLeft.Location, triangle.BottomRight.Location });
+                }
+                g.DrawPolygon(pen, new Point[] { triangle.Top.Location, triangle.BottomLeft.Location, triangle.BottomRight.Location });
+
+            }
+            else if (isLeft)
+            {
+                var brush = new SolidBrush(Util.FadeColor(Color.Gold, Color.DarkRed, (level / 10f)));
+                g.FillPolygon(brush, new Point[] { triangle.Top.Location, triangle.BottomLeft.Location, triangle.BottomRight.Location });
+                g.DrawPolygon(pen, new Point[] { triangle.Top.Location, triangle.BottomLeft.Location, triangle.BottomRight.Location });
+            }
+            else
+            {
+                var brush = new SolidBrush(Util.FadeColor(Color.LightGreen, Color.DarkGreen, (level / 10f)));
+                g.FillPolygon(brush, new Point[] { triangle.Top.Location, triangle.BottomLeft.Location, triangle.BottomRight.Location });
+                g.DrawPolygon(pen, new Point[] { triangle.Top.Location, triangle.BottomLeft.Location, triangle.BottomRight.Location });
+            }
+
+
+            DrawTriangles(triangle.LeftChild, g,true, level+1);
+            DrawTriangles(triangle.RightChild, g,false, level + 1);
+        }
+
+    }
 }
 
 

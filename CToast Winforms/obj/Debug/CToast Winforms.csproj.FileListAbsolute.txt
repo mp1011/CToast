@@ -27,3 +27,5 @@ C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToast.Propertie
 C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToast Winforms.csproj.GenerateResource.Cache
 C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToastWinforms.exe
 C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\obj\Debug\CToastWinforms.pdb
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\KP-ImageViewerV2.dll
+C:\Users\Miko\Documents\GitHub\CToast\CToast Winforms\bin\Debug\KP-ImageViewerV2.pdb

@@ -63,7 +63,7 @@ namespace TreePainter_v3_1
         public Font Font { get; set; }
         public override bool IsBlank { get { return this.Text == "<<IGNORE ME>>"; } }
 
-        public override int XPadding { get { return 20; } }
+        public override int XPadding { get { return 4; } } //20
         public override int YPadding { get { return 30; } }
 
         public TextVisualTreeNode(TreeNode source, Font nodeFont) : base(source)
@@ -225,6 +225,8 @@ namespace TreePainter_v3_1
         public List<VisualTreeNode> Nodes { get; private set; }
         public List<VisualTreeLine> Lines { get; private set; }
 
+        public IEnumerable<VisualTreeNode> VisibleNodes { get { return Nodes.OrderBy(p=>p.Location.Y).ThenBy(p=>p.Location.X).Where(p => !p.IsBlank); } }
+
         private Rectangle mBounds;
         public Rectangle Bounds
         {
@@ -232,10 +234,10 @@ namespace TreePainter_v3_1
             {
                 if (mBounds.IsEmpty)
                 {
-                    int minLeft = Nodes.Min(p => p.Area.Left);
-                    int maxRight = Nodes.Max(p => p.Area.Right);
-                    int minTop = Nodes.Min(p => p.Area.Top);
-                    int maxBottom = Nodes.Max(p => p.Area.Bottom);
+                    int minLeft = VisibleNodes.Min(p => p.Area.Left);
+                    int maxRight = VisibleNodes.Max(p => p.Area.Right);
+                    int minTop = VisibleNodes.Min(p => p.Area.Top);
+                    int maxBottom = VisibleNodes.Max(p => p.Area.Bottom);
 
                     int pad = 4;
                     mBounds = new Rectangle(minLeft, minTop, (maxRight - minLeft)+pad, (maxBottom - minTop)+4);
@@ -266,6 +268,60 @@ namespace TreePainter_v3_1
             }
 
             return delta;
+        }
+
+        public void Compress()
+        {
+
+            int levelY = Int32.MaxValue;
+            var visNodes = this.VisibleNodes.ToArray();
+
+          //  int firstX = 0;
+            while (visNodes.Count(p => p.Area.Y < levelY) > 0)
+            {
+                levelY = visNodes.Where(p => p.Area.Y < levelY).Max(p => p.Area.Y);
+                var x = -1;
+
+                foreach (var layerNode in visNodes.Where(p => p.Area.Y == levelY))
+                {
+                    if (layerNode.IsBlank)
+                        continue;
+
+                    if (x == -1)
+                    {
+                        layerNode.Location = new Point(0, layerNode.Location.Y);
+                       // layerNode.Location = new Point(firstX + layerNode.XPadding, layerNode.Location.Y);
+                       // firstX = layerNode.Location.X;
+                       // x = firstX;
+                    }
+                    else
+                        layerNode.Location = new Point(x, layerNode.Location.Y);
+
+                    x += layerNode.Area.Width + layerNode.XPadding;
+                }
+            }
+
+            this.mBounds = Rectangle.Empty;
+
+
+            levelY = Int32.MinValue;
+            while (visNodes.Count(p => p.Area.Y > levelY) > 0)
+            {
+                levelY = visNodes.Where(p => p.Location.Y > levelY).Min(p => p.Location.Y);
+
+                var levelNodes = visNodes.Where(p => p.Area.Y == levelY).ToArray();
+                var width = levelNodes.Max(p => p.Area.Right);
+
+                var center = this.Bounds.Width / 2f;
+
+                var left = (int)(center - (width / 2f));
+                foreach (var node in levelNodes)
+                    node.Location = new Point(node.Location.X + left, node.Location.Y);
+            }
+
+
+
+            this.mBounds = Rectangle.Empty;
         }
 
         public void AlignLeft()
@@ -399,6 +455,7 @@ namespace TreePainter_v3_1
                     // its position should be calculated based on its child nodes.
                     if (z < maxDepht)
                     {
+                       
                         var firstChild = this.Nodes.FirstOrDefault(p => p.ID == (ulong)nodeToPaint.FirstNode.Tag);
                         var lastChild = this.Nodes.FirstOrDefault(p => p.ID == (ulong)nodeToPaint.LastNode.Tag);
 
@@ -439,7 +496,7 @@ namespace TreePainter_v3_1
                     // The next sibling node will be to the right of the current one.
                     // Where this node finishes plus Margin.
 
-                    // Note: Label.Right != Label.Left + labelAux.PreferredWidth
+                    // Note: Label.Right != Label.Left + labelAux.PreferredWidth                    
                     x = visualNode.Area.Left + visualNode.Area.Width + visualNode.XPadding;
                //     System.Console.WriteLine("Calculated X:" + x.ToString());
                 }

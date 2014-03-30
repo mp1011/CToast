@@ -35,17 +35,17 @@ namespace TreePainter_v3_1
                 yield return PaintTree(tree,paintSettings,false);
         }
 
-        public static Bitmap RenderSingleTree(TreeView tree)
+        public static BitmapWithOrigin RenderSingleTree(TreeView tree)
         {
             var paintSettings = new PaintSettings();
             var nodeFont = new Font("Arial", 12, FontStyle.Bold);
-            return PaintTree(VisualTree.Create<TextVisualTreeNode>(tree, t => new TextVisualTreeNode(t, nodeFont)), paintSettings, true).Bitmap;
+            return PaintTree(VisualTree.Create<TextVisualTreeNode>(tree, t => new TextVisualTreeNode(t, nodeFont)), paintSettings, true);
         }
 
-        public static Bitmap RenderSingleTreeAsColorTree(TreeView tree)
+        public static BitmapWithOrigin RenderSingleTreeAsColorTree(TreeView tree)
         {
             var paintSettings = new PaintSettings();
-            return PaintTree(VisualTree.Create<CircleVisualTreeNode>(tree, t => new CircleVisualTreeNode(t)),paintSettings,true).Bitmap;
+            return PaintTree(VisualTree.Create<CircleVisualTreeNode>(tree, t => new CircleVisualTreeNode(t)),paintSettings,true);
         }
 
         public static IEnumerable<Bitmap> RenderTreesAsColorTrees(IEnumerable<TreeView> trees)
@@ -65,16 +65,17 @@ namespace TreePainter_v3_1
 
         private static BitmapWithOrigin PaintTree(VisualTree tree, PaintSettings paintSettings, bool alignCenter) 
         {
-            if (alignCenter)
-                tree.AlignInArea(tree.Bounds.Size);
-            else
+            tree.Compress();
+           // if (alignCenter)
+             //   tree.AlignInArea(tree.Bounds.Size);
+         //   else
                 tree.AlignLeft();
 
             var bounds = tree.RecalculateBounds();
           
             Rectangle rect = new Rectangle(0, 0, bounds.Right, bounds.Bottom);
 
-            var bmp = new Bitmap(bounds.Width, bounds.Height);
+            var bmp = new Bitmap(bounds.Right, bounds.Bottom);
             
             Graphics g = Graphics.FromImage(bmp);
             foreach (var line in tree.Lines)

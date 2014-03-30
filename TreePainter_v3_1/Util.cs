@@ -4,11 +4,41 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 
 namespace TreePainter_v3_1
 {
     static class Util
     {
+        public static TreeNode FirstNonBlankNode(this TreeNode tree)
+        {
+            foreach (TreeNode node in tree.Nodes)
+            {
+                if (!node.IsBlank())
+                    return node;
+            }
+
+            return null;
+        }
+
+        public static TreeNode LastNonBlankNode(this TreeNode tree)
+        {
+            TreeNode last=null;
+            foreach (TreeNode node in tree.Nodes)
+            {
+                if (!node.IsBlank())
+                    last= node;
+            }
+
+            return last;
+        }
+
+
+
+        public static bool IsBlank(this TreeNode node)
+        {
+            return node == null || node.Text == "<<IGNORE ME>>";
+        }
 
         public static void DrawRoundedRectangle(this Graphics g, Pen pen, Rectangle area, int radius)
         {

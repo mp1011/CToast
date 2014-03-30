@@ -480,7 +480,7 @@ namespace CToast
             return Evaluation.Unchanged(this);
         }
 
-        public override object Value { get { return "<<" + this.Value + ">>"; } }
+        public override object Value { get { return "<<" + base.Value + ">>"; } }
 
         protected override Node CopyInner()
         {

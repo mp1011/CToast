@@ -18,6 +18,8 @@ namespace CToast_Console
             var stepSize = 50;
             var eval = new EvaluationChain();
 
+            Console.WriteLine("Type help for commands");
+
             while (true)
             {
                 Console.Write(">");
@@ -26,6 +28,15 @@ namespace CToast_Console
                 if (String.IsNullOrEmpty(line))
                 {
                    Evaluate(eval, stepSize, renderer);
+                }
+                else if (line == "help")
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("exit - Close the program");
+                    Console.WriteLine("clear - Clear the console window");
+                    Console.WriteLine("reset - Reload the library file");
+                    Console.WriteLine("step=# - Sets the number of evaluation steps ber patch (currently " + stepSize + ")");
+                    Console.WriteLine("step=0 - Displays evaluation results immediately and continues until evaluation completes or any key is pressed");                    
                 }
                 else if (line == "exit")
                     break;
@@ -45,10 +56,10 @@ namespace CToast_Console
                 else if (line.StartsWith("step="))
                 {
                     stepSize = Int32.Parse(line.Replace("step=", ""));
-                }                
+                }
                 else
                 {
-                    eval.Reset(context, Parser.Parse(line, context),line);
+                    eval.Reset(context, Parser.Parse(line, context), line);
                     if (stepSize == 0)
                     {
                         Evaluate(eval, 1, renderer);
@@ -70,7 +81,7 @@ namespace CToast_Console
             }
         }
 
-        private static void Evaluate(EvaluationChain eval, int numSteps, ITreeRenderer renderer)
+        private static void Evaluate(EvaluationChain eval, int numSteps, ConsoleRenderer renderer)
         {
             foreach (var node in eval.AddSteps(numSteps))
             {
@@ -81,7 +92,7 @@ namespace CToast_Console
 
         private static Context Reset()
         {
-            var ctx = new Context(Environment.CommandLine);          
+            var ctx = new Context(Environment.GetCommandLineArgs().Skip(1).LastOrDefault());          
             Console.WriteLine("Context Reset");
             return ctx;
         }
