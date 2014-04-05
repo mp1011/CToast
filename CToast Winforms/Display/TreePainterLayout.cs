@@ -26,10 +26,6 @@ namespace CToast
             get { return "TreePainter v3"; }
         }
 
-        public TreePainterLayout(System.Windows.Forms.Control c)  :base(c)
-        {
-        }
-
         private Font mFont = new Font("Arial", 12, FontStyle.Bold);
 
         protected override VisualTreeNode<TreePainterNodeData> CreateNewNode(Node n, int depth)

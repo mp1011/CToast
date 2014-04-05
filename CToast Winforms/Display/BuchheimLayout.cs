@@ -41,10 +41,6 @@ namespace CToast
     /// </summary>
     class BuchheimLayout : TreeLayout<BuchheimVisualNodeData>
     {
-        public BuchheimLayout(System.Windows.Forms.Control c) : base(c)
-        {
-        }
-
         public override string Name
         {
             get { return "Buchheim Layout"; }
@@ -59,10 +55,10 @@ namespace CToast
 
         protected override IEnumerable<ITreeLayoutStep<BuchheimVisualNodeData>> GetLayoutSteps()
         {
-          //  yield return new DebugRelabelNodes<BuchheimVisualNodeData>();
             yield return new BuchheimInit();
             yield return new BuchheimFirstWalk();
             yield return new BuchheimSecondWalk();
+            yield return new SplitCollidingChildren<BuchheimVisualNodeData>();
             yield return new CenterTree<BuchheimVisualNodeData> { HorizontalOnly = true };
         }
 
@@ -73,7 +69,7 @@ namespace CToast
                 if (tree == null)
                     return;
 
-                tree.Position = new Point(-1, tree.Depth * tree.NodeBounds.Height);
+                tree.Position = new Point(-1, tree.Depth * tree.NodeBoundsWithPadding.Height);
                 DoLayout(tree.LeftChild, layoutArea);
                 DoLayout(tree.RightChild, layoutArea);
             }
@@ -83,7 +79,7 @@ namespace CToast
         {
             public void DoLayout(VisualTreeNode<BuchheimVisualNodeData> tree, Size layoutArea)
             {
-                FirstWalk(tree, tree.NodeBounds.Width + 8);
+                FirstWalk(tree, tree.NodeBoundsWithPadding.Width);
             }
 
             private void FirstWalk(VisualTreeNode<BuchheimVisualNodeData> node, int distance)
@@ -125,6 +121,7 @@ namespace CToast
                 var w = v.LeftBrother;
                 if (w != null)
                 {
+
                     //in buchheim notation:
                     //i == inner; o == outer; r == right; l == left;
                     var vir = v;
@@ -149,8 +146,9 @@ namespace CToast
 
                         if (vor != null)
                             vor.Data.Ancestor = v;
+
                         //should detect and fix overlap
-                        var shift = (vil.X + sil) - (vir.X + sir) + distance;
+                        var shift = (vil.NodeBoundsWithPadding.Right + sil) - (vir.NodeBoundsWithPadding.Left + sir) + distance;
                         if (shift > 0)
                         {
                             var a = Ancestor(vil, v, defaultAncestor);
@@ -234,16 +232,15 @@ namespace CToast
             private void SecondWalk(VisualTreeNode<BuchheimVisualNodeData> node, int m, int depth)
             {
                 node.X += m;
-                node.Y = depth * node.NodeBounds.Height;
+                node.Y = depth; 
 
                 foreach (var child in node.Children)
-                    SecondWalk(child, m + node.Data.Mod, depth + 1);
+                    SecondWalk(child, m + node.Data.Mod, depth + node.NodeBoundsWithPadding.Height);
             }
 
         }
 
-    
-       
+
 
     }
 }

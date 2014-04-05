@@ -19,8 +19,6 @@ namespace CToast
 	        get { return "Radial";}
         }
 
-        public RadialLayout(System.Windows.Forms.Control c) : base(c) { }
-
         protected override VNode  CreateNewNode(Node n, int depth)
         {
             return new VNode { Data = new RadialTreeNodeData() };

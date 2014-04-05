@@ -92,6 +92,7 @@
     <Compile Include="Display\Display.cs" />
     <Compile Include="Display\GraphSharp.cs" />
     <Compile Include="Display\Layout.cs" />
+    <Compile Include="Display\LayoutModel.cs" />
     <Compile Include="Display\RadialLayout.cs" />
     <Compile Include="Display\Text.cs" />
     <Compile Include="Display\TreePainterLayout.cs" />

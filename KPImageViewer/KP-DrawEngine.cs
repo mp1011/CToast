@@ -41,7 +41,7 @@ namespace KaiwaProjects
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
+               // System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
             }
 		}
 
@@ -74,7 +74,7 @@ namespace KaiwaProjects
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
+              //  System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
                 return false;
             }
 		}
@@ -90,7 +90,7 @@ namespace KaiwaProjects
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
+               // System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
             }
 		}
 
@@ -102,7 +102,7 @@ namespace KaiwaProjects
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
+              //  System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
                 return false;
             }
 		}

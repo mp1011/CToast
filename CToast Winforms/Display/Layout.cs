@@ -6,21 +6,6 @@ using System.Drawing;
 
 namespace CToast
 {
-    interface IVisualTree
-    {
-        IVisualTree Parent { get; }
-        IVisualTree LeftTree { get; }
-        IVisualTree RightTree { get; }
-        Point Position { get; }
-        Rectangle NodeBounds { get; }
-        Rectangle TreeBounds { get; }
-        int Depth { get; }
-        int ChildNodeCount { get; }
-        string Text { get; }
-        void Move(int dx, int dy);
-        int DeepestLevel { get; }
-    }
-
     static class IVisualTreeUtil
     {
         public static IEnumerable<IVisualTree> GetChildren(this IVisualTree tree)
@@ -45,216 +30,21 @@ namespace CToast
         }
     }
 
-    interface ITreeLayout
-    {
-        IVisualTree LayoutTree(Node root);
-    }
-
-    class VisualTreeNode<T> : IVisualTree
-    {
-        public string Text { get; set; }
-
-        public VisualTreeNode<T> Parent { get; set; }
-        public VisualTreeNode<T> LeftChild { get; set; }
-        public VisualTreeNode<T> RightChild { get; set; }
-        public Point Position { get; set; }
-        public int Depth { get; set; }
-
-        public int Index { get; set; }
-
-        public int X { get { return Position.X; } set { Position = new Point(value, Position.Y); } }
-        public int Y { get { return Position.Y; } set { Position = new Point(Position.X, value); } }
-
-        public T Data { get; set; }
-
-        public IEnumerable<VisualTreeNode<T>> Children
-        {
-            get
-            {
-                if (LeftChild != null) yield return LeftChild;
-                if (RightChild != null) yield return RightChild;
-            }
-        }
-        public Rectangle NodeBounds
-        {
-            get
-            {
-                return new Rectangle(this.X - 10, this.Y - 10, 20, 20);
-            }
-        }
-
-        private Rectangle mBounds;
-        public Rectangle TreeBounds
-        {
-            get
-            {
-                if (mBounds != Rectangle.Empty)
-                    return mBounds;
-
-                var ac = this.AllChildren.ToArray();
-                var minX = ac.Min(p => p.NodeBounds.Left);
-                var maxX = ac.Max(p => p.NodeBounds.Right);
-                var minY = ac.Min(p => p.NodeBounds.Top);
-                var maxY = ac.Max(p => p.NodeBounds.Bottom);
-
-                mBounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-                return mBounds;
-            }
-        }
-
-        private VisualTreeNode<T> mLeftBrother = null;
-        private bool mDidLeftBrotherCalc;
-
-        public VisualTreeNode<T> LeftBrother
-        {
-            get
-            {
-                if (mDidLeftBrotherCalc)
-                    return mLeftBrother;
-
-
-                if (this.Parent == null)
-                    return null;
-
-                if (Parent.RightChild == this)
-                    mLeftBrother = Parent.LeftChild;
-
-                mDidLeftBrotherCalc = true;
-
-                return mLeftBrother;
-            }
-        }
-
-      
-        public IEnumerable<VisualTreeNode<T>> AllChildren
-        {
-            get
-            {
-                yield return this;
-                foreach (var c in this.Children)
-                {
-                    foreach (var cc in c.AllChildren)
-                        yield return cc;
-                }
-            }
-        }
-
-        public VisualTreeNode<T> LeftMostSibling
-        {
-            get
-            {
-                if (this.Parent != null && this != Parent.Children.First())
-                    return Parent.Children.First();
-                else
-                    return null;
-            }
-        }
-
-        public void Move(int x, int y)
-        {
-            this.Position = new Point(this.Position.X + x, this.Position.Y + y);
-
-            foreach (var child in Children)
-                child.Move(x, y);
-
-            mBounds = Rectangle.Empty;
-        }
-
-        private int mCount = -1;
-
-        public int ChildNodeCount
-        {
-            get
-            {
-                if (mCount > -1)
-                    return mCount;
-
-                mCount = 0;
-                if (this.LeftTree != null)
-                    mCount += this.LeftTree.ChildNodeCount;
-                if (this.RightChild != null)
-                    mCount += this.RightTree.ChildNodeCount;
-
-                if (this.LeftTree == null && this.RightTree == null)
-                    mCount = 1;
-
-                return mCount;
-            }
-        }
-
-        private int mTreeDepth = -1;
-        public int TreeDepth { 
-            get
-            {
-                if (mTreeDepth != -1)
-                    return mTreeDepth;
-
-                if (this.LeftChild != null && this.RightChild != null)
-                    mTreeDepth = 1 + Math.Max(this.LeftChild.TreeDepth, this.RightChild.TreeDepth);
-                else if (this.LeftChild != null)
-                    mTreeDepth = 1 + this.LeftChild.TreeDepth;
-                else if (this.RightChild != null)
-                    mTreeDepth = 1 + this.RightChild.TreeDepth;
-                else
-                    mTreeDepth = 1;
-               
-
-                return mTreeDepth;
-            }
-        }
-
-        public IEnumerable<VisualTreeNode<T>> BreadthFirstTraversal()
-        {
-            Queue<VisualTreeNode<T>> queue = new Queue<VisualTreeNode<T>>();
-            queue.Enqueue(this);
-
-            List<VisualTreeNode<T>> output = new List<VisualTreeNode<T>>();
-            
-            while(queue.FirstOrDefault() != null)
-            {
-                var node = queue.Dequeue();
-                output.Add(node);
-
-                if(node.LeftChild != null)
-                    queue.Enqueue(node.LeftChild);
-                if(node.RightChild != null)
-                    queue.Enqueue(node.RightChild);
-            }
-
-            return output;
-        }
-
-
-        public IVisualTree LeftTree { get { return this.LeftChild; } }
-        public IVisualTree RightTree { get { return this.RightChild; } }
-
-        public int DeepestLevel { get;set;}
-
-        IVisualTree IVisualTree.Parent
-        {
-            get { return this.Parent; }
-        }
-
-   
-    }
-
-    interface ITreeLayoutStep<T>
-    {
-         void DoLayout(VisualTreeNode<T> tree,Size layoutArea);
-    }
-
     abstract class TreeLayout<T> : TreeRenderer<VisualTreeNode<T>>, ITreeLayout 
     {
         public abstract string Name { get; }
-        private System.Windows.Forms.Control mControl;
-        
-        public TreeLayout(System.Windows.Forms.Control control)
+        private VisualTreeRenderer mRenderer;
+
+        public void SetRenderer(VisualTreeRenderer renderer)
         {
-            mControl = control;
+            mRenderer = renderer;
         }
 
         protected override VisualTreeNode<T> RenderNode(Node root)
         {
+            if (root == null)
+                return new VisualTreeNode<T>();
+
             var visualTree = CreateVisualTree(root, 0);
 
             var deepestLevel = visualTree.AllChildren.Max(p => p.Depth);
@@ -264,7 +54,7 @@ namespace CToast
          //   new DebugRelabelNodes<T>().DoLayout(visualTree, mControl.Size);
 
             foreach (var step in this.GetLayoutSteps())
-                step.DoLayout(visualTree, mControl.Size);
+                step.DoLayout(visualTree, mRenderer.LayoutSize);
 
             return visualTree;
         }
@@ -286,6 +76,7 @@ namespace CToast
             vt.RightChild = CreateVisualTree(n.RightNode, depth + 1);
             vt.Depth = depth;
             vt.Index = 1;
+            vt.NodeSize = mRenderer.CalculateNodeSize(n);
 
             int index = 1;
             foreach (var child in vt.Children)
@@ -306,7 +97,6 @@ namespace CToast
 
     }
 
-
     class CenterTree<T> : ITreeLayoutStep<T>
     {
         public bool HorizontalOnly { get; set; }
@@ -323,6 +113,36 @@ namespace CToast
             tree.Move(dx,dy);
         }
     }
+
+    class SplitCollidingChildren<T> : ITreeLayoutStep<T>
+    {
+
+        public void DoLayout(VisualTreeNode<T> tree, Size layoutArea)
+        {
+            DoLayout(tree, 0);
+        }
+
+        private void DoLayout(VisualTreeNode<T> tree, int shift)
+        {
+            tree.X += shift;
+
+            if (tree.LeftTree == null || tree.RightTree == null)            
+            {
+                if (tree.LeftChild != null)
+                    DoLayout(tree.LeftChild, shift);
+                else if (tree.RightChild != null)
+                    DoLayout(tree.RightChild, shift);
+
+                return;
+            }
+
+            int overlap = Math.Max(0, tree.LeftChild.NodeBoundsWithPadding.Right - tree.RightChild.NodeBoundsWithPadding.Left);          
+            DoLayout(tree.LeftChild, shift - (overlap/2));
+            DoLayout(tree.RightChild, shift + (overlap/2));
+
+        }
+    }
+
 
     class DebugRelabelNodes<T> : ITreeLayoutStep<T>
     {

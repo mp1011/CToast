@@ -5,4 +5,3 @@ C:\Users\Miko\Documents\GitHub\CToast\KPImageViewer\obj\Debug\KaiwaProjects.Prop
 C:\Users\Miko\Documents\GitHub\CToast\KPImageViewer\obj\Debug\KP-ImageViewerV2.csproj.GenerateResource.Cache
 C:\Users\Miko\Documents\GitHub\CToast\KPImageViewer\obj\Debug\KP-ImageViewerV2.dll
 C:\Users\Miko\Documents\GitHub\CToast\KPImageViewer\obj\Debug\KP-ImageViewerV2.pdb
-C:\Users\Miko\Documents\GitHub\CToast\KPImageViewer\obj\Debug\KP-ImageViewerV2.csprojResolveAssemblyReference.cache

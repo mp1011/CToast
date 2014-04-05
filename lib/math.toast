@@ -53,3 +53,6 @@
 @sudan(n,0) -> x
 @sudan(n,x,y)-> @sudan(n-1,@sudan(n,x,y-1),@sudan(n,x,y-1)+y))
 
+@golomb(1) -> 1
+@golomb(n) -> 1 + @golomb(n - @golomb(@golomb(n-1)))
+

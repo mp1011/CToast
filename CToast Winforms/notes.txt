@@ -1,1 +1,1 @@
-﻿equality operator needs testing
+﻿

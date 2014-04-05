@@ -46,11 +46,6 @@
             this.imgSunburst = new KaiwaProjects.KpImageViewer();
             this.pgeTree = new System.Windows.Forms.TabPage();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.pgeFile = new System.Windows.Forms.TabPage();
-            this.btnRenderRadialTrees = new System.Windows.Forms.Button();
-            this.btnRenderSunbursts = new System.Windows.Forms.Button();
-            this.btnRenderTextTrees = new System.Windows.Forms.Button();
-            this.btnRenderColorTrees = new System.Windows.Forms.Button();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.txtInput = new System.Windows.Forms.ComboBox();
             this.chkShowSelectors = new System.Windows.Forms.CheckBox();
@@ -63,9 +58,12 @@
             this.btnEvaluate = new System.Windows.Forms.Button();
             this.worker = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.pbSaveToDisk = new System.Windows.Forms.ProgressBar();
+            this.btnSaveToDisk = new System.Windows.Forms.Button();
             this.btnAnimate = new System.Windows.Forms.Button();
             this.tbDisplayedStep = new System.Windows.Forms.TrackBar();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.saveWorker = new System.ComponentModel.BackgroundWorker();
             this.tabDisplay.SuspendLayout();
             this.pgeImage.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -73,7 +71,6 @@
             this.pgeText.SuspendLayout();
             this.pgeSunburst.SuspendLayout();
             this.pgeTree.SuspendLayout();
-            this.pgeFile.SuspendLayout();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbSteps)).BeginInit();
             this.pnlBottom.SuspendLayout();
@@ -87,7 +84,6 @@
             this.tabDisplay.Controls.Add(this.pgeText);
             this.tabDisplay.Controls.Add(this.pgeSunburst);
             this.tabDisplay.Controls.Add(this.pgeTree);
-            this.tabDisplay.Controls.Add(this.pgeFile);
             this.tabDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabDisplay.Location = new System.Drawing.Point(0, 104);
             this.tabDisplay.Name = "tabDisplay";
@@ -287,60 +283,6 @@
             this.treeView1.Size = new System.Drawing.Size(975, 338);
             this.treeView1.TabIndex = 0;
             // 
-            // pgeFile
-            // 
-            this.pgeFile.Controls.Add(this.btnRenderRadialTrees);
-            this.pgeFile.Controls.Add(this.btnRenderSunbursts);
-            this.pgeFile.Controls.Add(this.btnRenderTextTrees);
-            this.pgeFile.Controls.Add(this.btnRenderColorTrees);
-            this.pgeFile.Location = new System.Drawing.Point(4, 22);
-            this.pgeFile.Name = "pgeFile";
-            this.pgeFile.Padding = new System.Windows.Forms.Padding(3);
-            this.pgeFile.Size = new System.Drawing.Size(975, 338);
-            this.pgeFile.TabIndex = 4;
-            this.pgeFile.Text = "File";
-            this.pgeFile.UseVisualStyleBackColor = true;
-            // 
-            // btnRenderRadialTrees
-            // 
-            this.btnRenderRadialTrees.Location = new System.Drawing.Point(11, 133);
-            this.btnRenderRadialTrees.Name = "btnRenderRadialTrees";
-            this.btnRenderRadialTrees.Size = new System.Drawing.Size(158, 32);
-            this.btnRenderRadialTrees.TabIndex = 3;
-            this.btnRenderRadialTrees.Text = "Render as Radial Trees";
-            this.btnRenderRadialTrees.UseVisualStyleBackColor = true;
-            this.btnRenderRadialTrees.Click += new System.EventHandler(this.btnRenderRadialTrees_Click);
-            // 
-            // btnRenderSunbursts
-            // 
-            this.btnRenderSunbursts.Location = new System.Drawing.Point(11, 95);
-            this.btnRenderSunbursts.Name = "btnRenderSunbursts";
-            this.btnRenderSunbursts.Size = new System.Drawing.Size(158, 32);
-            this.btnRenderSunbursts.TabIndex = 2;
-            this.btnRenderSunbursts.Text = "Render as Sunbursts";
-            this.btnRenderSunbursts.UseVisualStyleBackColor = true;
-            this.btnRenderSunbursts.Click += new System.EventHandler(this.btnRenderSunbursts_Click);
-            // 
-            // btnRenderTextTrees
-            // 
-            this.btnRenderTextTrees.Location = new System.Drawing.Point(11, 57);
-            this.btnRenderTextTrees.Name = "btnRenderTextTrees";
-            this.btnRenderTextTrees.Size = new System.Drawing.Size(158, 32);
-            this.btnRenderTextTrees.TabIndex = 1;
-            this.btnRenderTextTrees.Text = "Render as Text Trees";
-            this.btnRenderTextTrees.UseVisualStyleBackColor = true;
-            this.btnRenderTextTrees.Click += new System.EventHandler(this.btnRenderTextTrees_Click);
-            // 
-            // btnRenderColorTrees
-            // 
-            this.btnRenderColorTrees.Location = new System.Drawing.Point(11, 19);
-            this.btnRenderColorTrees.Name = "btnRenderColorTrees";
-            this.btnRenderColorTrees.Size = new System.Drawing.Size(158, 32);
-            this.btnRenderColorTrees.TabIndex = 0;
-            this.btnRenderColorTrees.Text = "Render as Color Trees";
-            this.btnRenderColorTrees.UseVisualStyleBackColor = true;
-            this.btnRenderColorTrees.Click += new System.EventHandler(this.btnRenderColorTrees_Click);
-            // 
             // pnlTop
             // 
             this.pnlTop.Controls.Add(this.txtInput);
@@ -377,6 +319,7 @@
             this.chkShowSelectors.TabIndex = 10;
             this.chkShowSelectors.Text = "Show Selectors";
             this.chkShowSelectors.UseVisualStyleBackColor = true;
+            this.chkShowSelectors.Visible = false;
             // 
             // btnRestart
             // 
@@ -473,6 +416,8 @@
             // 
             // pnlBottom
             // 
+            this.pnlBottom.Controls.Add(this.pbSaveToDisk);
+            this.pnlBottom.Controls.Add(this.btnSaveToDisk);
             this.pnlBottom.Controls.Add(this.btnAnimate);
             this.pnlBottom.Controls.Add(this.tbDisplayedStep);
             this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -480,6 +425,26 @@
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(983, 67);
             this.pnlBottom.TabIndex = 10;
+            // 
+            // pbSaveToDisk
+            // 
+            this.pbSaveToDisk.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbSaveToDisk.Location = new System.Drawing.Point(265, 38);
+            this.pbSaveToDisk.Name = "pbSaveToDisk";
+            this.pbSaveToDisk.Size = new System.Drawing.Size(706, 13);
+            this.pbSaveToDisk.TabIndex = 7;
+            this.pbSaveToDisk.Value = 1;
+            // 
+            // btnSaveToDisk
+            // 
+            this.btnSaveToDisk.Location = new System.Drawing.Point(170, 32);
+            this.btnSaveToDisk.Name = "btnSaveToDisk";
+            this.btnSaveToDisk.Size = new System.Drawing.Size(86, 23);
+            this.btnSaveToDisk.TabIndex = 2;
+            this.btnSaveToDisk.Text = "Save to Disk";
+            this.btnSaveToDisk.UseVisualStyleBackColor = true;
+            this.btnSaveToDisk.Click += new System.EventHandler(this.btnSaveToDisk_Click);
             // 
             // btnAnimate
             // 
@@ -506,6 +471,14 @@
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // saveWorker
+            // 
+            this.saveWorker.WorkerReportsProgress = true;
+            this.saveWorker.WorkerSupportsCancellation = true;
+            this.saveWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.saveWorker_DoWork);
+            this.saveWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.saveWorker_ProgressChanged);
+            this.saveWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.saveWorker_RunWorkerCompleted);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -525,7 +498,6 @@
             this.pgeText.PerformLayout();
             this.pgeSunburst.ResumeLayout(false);
             this.pgeTree.ResumeLayout(false);
-            this.pgeFile.ResumeLayout(false);
             this.pnlTop.ResumeLayout(false);
             this.pnlTop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbSteps)).EndInit();
@@ -559,12 +531,7 @@
         private System.Windows.Forms.Panel pnlBottom;
         private System.Windows.Forms.TrackBar tbDisplayedStep;
         private System.Windows.Forms.CheckBox chkShowSelectors;
-        private System.Windows.Forms.TabPage pgeFile;
-        private System.Windows.Forms.Button btnRenderColorTrees;
-        private System.Windows.Forms.Button btnRenderTextTrees;
         private System.Windows.Forms.TabPage pgeSunburst;
-        private System.Windows.Forms.Button btnRenderSunbursts;
-        private System.Windows.Forms.Button btnRenderRadialTrees;
         private KaiwaProjects.KpImageViewer imgTree;
         private KaiwaProjects.KpImageViewer imgSunburst;
         private System.Windows.Forms.Button btnAnimate;
@@ -575,5 +542,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cboLayout;
         private System.Windows.Forms.CheckedListBox clDrawStyle;
+        private System.Windows.Forms.ProgressBar pbSaveToDisk;
+        private System.Windows.Forms.Button btnSaveToDisk;
+        private System.ComponentModel.BackgroundWorker saveWorker;
     }
 }

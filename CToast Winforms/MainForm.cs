@@ -33,27 +33,31 @@ namespace CToast
 
             pgeGraph.Tag = new FormRendererHelper<GraphSharpViewModel> { Renderer = new GraphSharpRenderer(), AfterRenderAction = (a, n) => graphControl1.DataContext = a };
 
-            pgeImage.Tag = new FormRendererHelper<Bitmap> { Renderer = mCustomTreeRenderer, AfterRenderAction = (a, n) => { imgTree.Image = a; } };
-           // pgeTriangles.Tag = new FormRendererHelper<Bitmap> { Renderer = new TriangleTreeRenderer(), AfterRenderAction = (a, n) => { imgTriangles.Image = a; } };
-            pgeText.Tag = new FormRendererHelper<string> { Renderer = new SyntaxRenderer(), AfterRenderAction = (a, n) => { textBox1.Text = a; } };
-            pgeFile.Tag = new FormRendererHelper<bool> { Renderer = new NullRenderer(), NoAsync=true} ;
-           // pgeColorTree.Tag = new FormRendererHelper<BitmapWithOrigin> { Renderer = new ColorTreeRenderer(), AfterRenderAction = (a, n) => { imgColorTree.Image = a.Bitmap; } };
-            pgeSunburst.Tag = new FormRendererHelper<Bitmap> { Renderer = new SunburstRenderer(imgSunburst), AfterRenderAction = (a, n) => { imgSunburst.Image = a; } };
-          //  pgeRadialTree.Tag = new FormRendererHelper<Bitmap> { Renderer = new RadialTreeRenderer(imgRadialTree), AfterRenderAction = (a, n) => { imgRadialTree.Image = a; } };
+            pgeImage.Tag = new FormRendererHelper<Bitmap> { Renderer = mCustomTreeRenderer, AfterRenderAction = (a, n) => {
 
+              //  var zoom = imgTree.Zoom;             
+                imgTree.Image = a;
+             //   imgTree.Zoom = zoom;
+                
+
+            } };
+            pgeText.Tag = new FormRendererHelper<string> { Renderer = new SyntaxRenderer(), AfterRenderAction = (a, n) => { textBox1.Text = a; } };
+            pgeSunburst.Tag = new FormRendererHelper<Bitmap> { Renderer = new SunburstRenderer(imgSunburst), AfterRenderAction = (a, n) => { imgSunburst.Image = a; } };
             pgeTree.Tag = new FormRendererHelper<TreeView> {Renderer = new TreeViewRenderer(treeView1), NoAsync=true};
 
 
-            cboLayout.Items.Add(new BuchheimLayout(imgTree));
-            cboLayout.Items.Add(new RadialLayout(imgTree));
-            cboLayout.Items.Add(new TreePainterLayout(imgTree));
+            cboLayout.Items.Add(new BuchheimLayout());
+            cboLayout.Items.Add(new RadialLayout());
+            cboLayout.Items.Add(new TreePainterLayout());
             cboLayout.DisplayMember = "Name";
 
             clDrawStyle.Items.Add(new RenderLines());
             clDrawStyle.Items.Add(new RenderNodes());
             clDrawStyle.Items.Add(new RenderLeaves());
+            clDrawStyle.Items.Add(new RenderNodesWithoutText());
             clDrawStyle.Items.Add(new RenderTriangles());
             clDrawStyle.Items.Add(new RenderCircles());
+            clDrawStyle.Items.Add(new RenderBackdrop());
 
             clDrawStyle.DisplayMember = "Name";
 
@@ -285,54 +289,43 @@ namespace CToast
             return;
         }
 
-        private void btnRenderColorTrees_Click(object sender, EventArgs e)
-        {
-            RenderToFiles(TreePainter_v3_1.TreeRender.RenderTreesAsColorTrees);
+        #endregion
+
+        #region Render to Disk
+
+        private void btnSaveToDisk_Click(object sender, EventArgs e)
+        {            
+            btnSaveToDisk.Enabled = false;
+            saveWorker.RunWorkerAsync(mCustomTreeRenderer);
         }
 
-        private void btnRenderTextTrees_Click(object sender, EventArgs e)
-        {
-            RenderToFiles(TreePainter_v3_1.TreeRender.RenderTreesAsTextTrees);
-        }
-
-        private void btnRenderSunbursts_Click(object sender, EventArgs e)
-        {
-            RenderToFiles(pgeSunburst.Tag as SunburstRenderer);
-        }
-
-        private void btnRenderRadialTrees_Click(object sender, EventArgs e)
-        {
-           // RenderToFiles(pgeRadialTree.Tag as RadialTreeRenderer);
-        }
-
-        private void RenderToFiles(TreeRenderer<Bitmap> renderer)
+        private void saveWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             string folder = PathHelper.CreateOutputFolder();
             System.IO.Directory.CreateDirectory(folder);
 
-            var treeRenderer = new TreeViewRendererAlternate();
-            var trees = mCurrentEvaluation.Steps.Select(p => treeRenderer.Render(p)).ToArray();
+            for (int i = 0; i < mCurrentEvaluation.TotalSteps; i++)
+            {
+                var image = mCustomTreeRenderer.Render(mCurrentEvaluation.Steps[i]);
+                image.Save(folder + "\\" + i.ToString("00000") + ".png", System.Drawing.Imaging.ImageFormat.Png);
 
-            int i = 0;
-            foreach (var image in mCurrentEvaluation.Steps.Select(p => renderer.Render(p)))
-                image.Save(folder + "\\" + (++i).ToString("00000") + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                saveWorker.ReportProgress((int)(((float)i / (float)mCurrentEvaluation.TotalSteps) * 100));
+            }
 
+            e.Result = "Images saved to " + folder; 
         }
 
-        private void RenderToFiles(Func<TreeView[],IEnumerable<Bitmap>> paintFunction)
+        private void saveWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            string folder = PathHelper.CreateOutputFolder();
-            System.IO.Directory.CreateDirectory(folder);
-
-            var treeRenderer = new TreeViewRendererAlternate();
-            var trees = mCurrentEvaluation.Steps.Select(p=> treeRenderer.Render(p)).ToArray();
-
-            int i = 0;
-            foreach (var image in paintFunction(trees))
-                image.Save(folder + "\\" + (++i).ToString("00000") + ".png", System.Drawing.Imaging.ImageFormat.Png);
-
+            pbSaveToDisk.Value = e.ProgressPercentage;
         }
 
+        private void saveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            pbSaveToDisk.Value = 0;
+            MessageBox.Show(e.Result.ToString());
+            btnSaveToDisk.Enabled = true;   
+        }
 
         #endregion
 
@@ -358,6 +351,10 @@ namespace CToast
                 RenderTreeNoAsync();
             }
         }
+
+       
+
+
 
     }
 
@@ -405,6 +402,8 @@ namespace CToast
 
             var steps = mDrawStyleCheckList.CheckedItems.OfType<IRenderingStep>().ToArray();
             mRenderer = new VisualTreeRenderer(drawPanel, layout, steps);
+
+            layout.SetRenderer(mRenderer);
 
         }
 

@@ -39,12 +39,6 @@ namespace KaiwaProjects
         public delegate void ImageViewerRotationEventHandler(object sender, ImageViewerRotationEventArgs e);
         public event ImageViewerRotationEventHandler AfterRotation;
 
-        public void SetPosition(int x, int y)
-        {
-            drawing.SetPosition(x, y);
-            this.Refresh();
-        }
-
         protected virtual void OnRotation(ImageViewerRotationEventArgs e)
         {
             if (AfterRotation != null)
@@ -1211,7 +1205,7 @@ namespace KaiwaProjects
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
+              //  System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
             }
         }
 
@@ -1291,7 +1285,7 @@ namespace KaiwaProjects
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
+            //    System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
             }
         }
 
@@ -1312,7 +1306,7 @@ namespace KaiwaProjects
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
+              //  System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
             }
         }
 
@@ -1381,7 +1375,7 @@ namespace KaiwaProjects
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
+            //    System.Windows.Forms.MessageBox.Show("ImageViewer error: " + ex.ToString());
             }
         }
 
