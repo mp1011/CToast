@@ -2,3 +2,6 @@
 @import("list.toast")
 @import("math.toast")
 @import("sorting.toast")
+
+@makeTree(0) -> x
+@makeTree(n) -> @makeTree(n-1) + @makeTree(n-1);

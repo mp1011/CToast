@@ -1,4 +1,25 @@
-@ack(3,2)
-@take(8, @fib2())
-@map(@fac, @take(10,@naturalNumbers()))
-@quickSort([10,4,6,1,9,12,3])
+@upArrow(3,3,1)
+@upArrow(3,3,2)
+@upArrow(3,3,3)
+@mergeSort([10,5,3,8,4,1,4,0,59,20])
+@quickSort([10,5,3,8,4,1,4,0,59,20])
+@fac(5)
+2 + h:t:t:t:t:X
+(1+2) + h:t:t:t:t:X
+(1+2) + h:t:t:X
+(1+2) + h::X
+(1+2) - h::X
+(1+2) - h::(Y+X)
+(1+2*3) - h::(Y+X)
+1,2,3,4,5,6,7,8,9
+1,2,3
+1,2,3,4
+@take(8,@fib2())
+@makeTree(4)
+@makeTree(5)
+@makeTree(6)
+@makeTree(7)
+@makeTree(2)
+2%5
+5%2
+@insertionSort([10,5,3,8,4,1,4,0,59,20])

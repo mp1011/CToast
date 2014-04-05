@@ -88,9 +88,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Display.cs" />
+    <Compile Include="Display\BuchheimLayout.cs" />
+    <Compile Include="Display\Display.cs" />
+    <Compile Include="Display\GraphSharp.cs" />
+    <Compile Include="Display\Layout.cs" />
+    <Compile Include="Display\RadialLayout.cs" />
+    <Compile Include="Display\Text.cs" />
+    <Compile Include="Display\TreePainterLayout.cs" />
     <Compile Include="GraphControl.xaml.cs">
       <DependentUpon>GraphControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Layout.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

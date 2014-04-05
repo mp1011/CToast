@@ -210,11 +210,19 @@ namespace CToast
 
             Int64[] ints = MathHelper.GetInts(leftTree, rightTree);
             if (ints != null)
+            {
+                if(ints[1] == 0)
+                    return Evaluation.Changed(new LiteralNode<Int64>(0));
                 return Evaluation.Changed(new LiteralNode<Int64>(ints[0] % ints[1]));
+            }
 
             double[] dbls = MathHelper.GetDoubles(leftTree, rightTree);
             if (dbls != null)
+            {
+                if (dbls[1] == 0)
+                    return Evaluation.Changed(new LiteralNode<double>(0));
                 return Evaluation.Changed(new LiteralNode<double>(dbls[0] % dbls[1]));
+            }
 
             return null;
         }

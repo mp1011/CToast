@@ -31,6 +31,10 @@ namespace CToast
             return fade;
         }
 
+        public static Point GetCenter(this Rectangle r)
+        {       
+            return new Point(r.Left + r.Width / 2, r.Top + r.Height / 2);
+        }
 
             /// <summary>
         /// Converts an angle in radians to a point

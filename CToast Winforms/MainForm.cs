@@ -29,18 +29,40 @@ namespace CToast
                     txtInput.Text = txtInput.Items[txtInput.Items.Count - 1].ToString();
             }
 
+            mCustomTreeRenderer = new CustomTreeRenderer();
+
             pgeGraph.Tag = new FormRendererHelper<GraphSharpViewModel> { Renderer = new GraphSharpRenderer(), AfterRenderAction = (a, n) => graphControl1.DataContext = a };
 
-            pgeImage.Tag = new FormRendererHelper<BitmapWithOrigin> { Renderer = new ImageRenderer(), AfterRenderAction = (a, n) => { imgTree.Image = a.Bitmap; } };
-            pgeTriangles.Tag = new FormRendererHelper<Bitmap> { Renderer = new TriangleTreeRenderer(), AfterRenderAction = (a, n) => { imgTriangles.Image = a; } };
+            pgeImage.Tag = new FormRendererHelper<Bitmap> { Renderer = mCustomTreeRenderer, AfterRenderAction = (a, n) => { imgTree.Image = a; } };
+           // pgeTriangles.Tag = new FormRendererHelper<Bitmap> { Renderer = new TriangleTreeRenderer(), AfterRenderAction = (a, n) => { imgTriangles.Image = a; } };
             pgeText.Tag = new FormRendererHelper<string> { Renderer = new SyntaxRenderer(), AfterRenderAction = (a, n) => { textBox1.Text = a; } };
             pgeFile.Tag = new FormRendererHelper<bool> { Renderer = new NullRenderer(), NoAsync=true} ;
-            pgeColorTree.Tag = new FormRendererHelper<BitmapWithOrigin> { Renderer = new ColorTreeRenderer(), AfterRenderAction = (a, n) => { imgColorTree.Image = a.Bitmap; } };
+           // pgeColorTree.Tag = new FormRendererHelper<BitmapWithOrigin> { Renderer = new ColorTreeRenderer(), AfterRenderAction = (a, n) => { imgColorTree.Image = a.Bitmap; } };
             pgeSunburst.Tag = new FormRendererHelper<Bitmap> { Renderer = new SunburstRenderer(imgSunburst), AfterRenderAction = (a, n) => { imgSunburst.Image = a; } };
-            pgeRadialTree.Tag = new FormRendererHelper<Bitmap> { Renderer = new RadialTreeRenderer(imgRadialTree), AfterRenderAction = (a, n) => { imgRadialTree.Image = a; } };
+          //  pgeRadialTree.Tag = new FormRendererHelper<Bitmap> { Renderer = new RadialTreeRenderer(imgRadialTree), AfterRenderAction = (a, n) => { imgRadialTree.Image = a; } };
 
-            pgeTree.Tag = new FormRendererHelper<TreeView> {Renderer = new TreeViewRenderer(treeView1), NoAsync=true}; 
-   
+            pgeTree.Tag = new FormRendererHelper<TreeView> {Renderer = new TreeViewRenderer(treeView1), NoAsync=true};
+
+
+            cboLayout.Items.Add(new BuchheimLayout(imgTree));
+            cboLayout.Items.Add(new RadialLayout(imgTree));
+            cboLayout.Items.Add(new TreePainterLayout(imgTree));
+            cboLayout.DisplayMember = "Name";
+
+            clDrawStyle.Items.Add(new RenderLines());
+            clDrawStyle.Items.Add(new RenderNodes());
+            clDrawStyle.Items.Add(new RenderLeaves());
+            clDrawStyle.Items.Add(new RenderTriangles());
+            clDrawStyle.Items.Add(new RenderCircles());
+
+            clDrawStyle.DisplayMember = "Name";
+
+            cboLayout.SelectedIndex = 0;
+            clDrawStyle.SetItemChecked(0, true);
+            clDrawStyle.SetItemChecked(1, true);
+
+            mCustomTreeRenderer.Update(imgTree, cboLayout, clDrawStyle);
+     
         }
 
         #region Controls
@@ -179,6 +201,32 @@ namespace CToast
 
         #endregion
 
+        #region "Tree Rendering"
+
+        private CustomTreeRenderer mCustomTreeRenderer;
+
+        private void cboLayout_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            mCustomTreeRenderer.Update(imgTree, cboLayout, clDrawStyle);
+            RenderTree();
+        }
+
+        private void clDrawStyle_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+          //  lblProgress.Text += "a";
+            //mCustomTreeRenderer.Update(imgTree, cboLayout, clDrawStyle);
+            //RenderTree();
+        }
+
+        private void clDrawStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            mCustomTreeRenderer.Update(imgTree, cboLayout, clDrawStyle);
+            RenderTree();
+        }
+
+
+        #endregion
+
         #region Rendering
 
 
@@ -254,7 +302,7 @@ namespace CToast
 
         private void btnRenderRadialTrees_Click(object sender, EventArgs e)
         {
-            RenderToFiles(pgeRadialTree.Tag as RadialTreeRenderer);
+           // RenderToFiles(pgeRadialTree.Tag as RadialTreeRenderer);
         }
 
         private void RenderToFiles(TreeRenderer<Bitmap> renderer)
@@ -311,7 +359,6 @@ namespace CToast
             }
         }
 
-
     }
 
     interface IFormRendererHelper
@@ -341,4 +388,30 @@ namespace CToast
                 AfterRenderAction(mRendering, Tree);
         }
     }
+
+    class CustomTreeRenderer : TreeRenderer<Bitmap>
+    {
+        private VisualTreeRenderer mRenderer;
+
+        public CustomTreeRenderer()
+        {
+        }
+
+        public void Update(Control drawPanel, ComboBox mLayoutsDropdown, CheckedListBox mDrawStyleCheckList)
+        {
+            var layout = mLayoutsDropdown.SelectedItem as ITreeLayout;
+            if (layout == null)
+                return;
+
+            var steps = mDrawStyleCheckList.CheckedItems.OfType<IRenderingStep>().ToArray();
+            mRenderer = new VisualTreeRenderer(drawPanel, layout, steps);
+
+        }
+
+        protected override Bitmap RenderNode(Node root)
+        {
+            return mRenderer.Render(root);
+        }
+    }
+
 }
