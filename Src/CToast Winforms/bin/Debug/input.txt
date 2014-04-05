@@ -1,0 +1,6 @@
+@fib2(8)
+@quickSort([6,5,4,1,8,5,3,4])
+@mergeSort([6,5,4,1,8,5,3,4])
+@hyper(3,3,3)
+@map(@(i)->@pow(2,i), @take(10,@naturalNumbers()))
+@fib(8)
