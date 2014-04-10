@@ -42,12 +42,10 @@ C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\QuickGraph.d
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\RibbonControlsLibrary.dll
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\System.Windows.Controls.Theming.dll
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\System.Windows.Controls.Theming.ExpressionDark.dll
-C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\TreePainter_v3_1.exe
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\WPFExtensions.dll
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\WPFToolkit.dll
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\CToast.pdb
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\KP-ImageViewerV2.pdb
-C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\TreePainter_v3_1.pdb
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\bin\Debug\GraphSharp.pdb
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\obj\Debug\CToast Winforms.csprojResolveAssemblyReference.cache
 C:\Users\Miko\Documents\GitHub\CToast\Src\CToast Winforms\obj\Debug\GraphControl.g.cs

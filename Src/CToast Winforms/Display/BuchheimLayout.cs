@@ -46,9 +46,14 @@ namespace CToast
             get { return "Buchheim Layout"; }
         }
 
+        public override LayoutOrientation Orientation
+        {
+            get { return LayoutOrientation.TopDown; }
+        }
+
         protected override VisualTreeNode<BuchheimVisualNodeData> CreateNewNode(Node n, int depth)
         {
-            var vn = new VisualTreeNode<BuchheimVisualNodeData> { Data = new BuchheimVisualNodeData() };
+            var vn = new VisualTreeNode<BuchheimVisualNodeData>(n) { Data = new BuchheimVisualNodeData() };
             vn.Data.Ancestor = vn;
             return vn;
         }
@@ -59,7 +64,6 @@ namespace CToast
             yield return new BuchheimFirstWalk();
             yield return new BuchheimSecondWalk();
             yield return new SplitCollidingChildren<BuchheimVisualNodeData>();
-            yield return new CenterTree<BuchheimVisualNodeData> { HorizontalOnly = true };
         }
 
         class BuchheimInit : ITreeLayoutStep<BuchheimVisualNodeData>

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
-using TreePainter_v3_1;
 
 namespace CToast
 {
@@ -48,22 +47,25 @@ namespace CToast
 
             cboLayout.Items.Add(new BuchheimLayout());
             cboLayout.Items.Add(new RadialLayout());
-            cboLayout.Items.Add(new TreePainterLayout());
+            cboLayout.Items.Add(new BottomUpLayout());
             cboLayout.DisplayMember = "Name";
 
             clDrawStyle.Items.Add(new RenderLines());
             clDrawStyle.Items.Add(new RenderNodes());
-            clDrawStyle.Items.Add(new RenderLeaves());
-            clDrawStyle.Items.Add(new RenderNodesWithoutText());
+            clDrawStyle.Items.Add(new RenderText());
+            clDrawStyle.Items.Add(new RenderLinesAlt());        
+            clDrawStyle.Items.Add(new RenderSyntax());
             clDrawStyle.Items.Add(new RenderTriangles());
             clDrawStyle.Items.Add(new RenderCircles());
             clDrawStyle.Items.Add(new RenderBackdrop());
+            clDrawStyle.Items.Add(new RenderSunburst());
 
             clDrawStyle.DisplayMember = "Name";
 
             cboLayout.SelectedIndex = 0;
             clDrawStyle.SetItemChecked(0, true);
             clDrawStyle.SetItemChecked(1, true);
+            clDrawStyle.SetItemChecked(2, true);
 
             mCustomTreeRenderer.Update(imgTree, cboLayout, clDrawStyle);
      

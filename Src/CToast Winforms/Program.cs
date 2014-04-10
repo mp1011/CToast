@@ -25,6 +25,16 @@ namespace CToast
     static class Util
     {
 
+        public static int FixAngle(int angle)
+        {
+            while (angle < 0)
+                angle += 360;
+            while (angle >= 360)
+                angle -= 360;
+
+            return angle;
+        }
+
         public static System.Drawing.Color FadeColor(System.Drawing.Color start, System.Drawing.Color end, float percent)
         {
             System.Drawing.Color fade = System.Drawing.Color.FromArgb((byte)(start.R + ((end.R - start.R) * percent)), (byte)(start.G + ((end.G - start.G) * percent)), (byte)(start.B + ((end.B - start.B) * percent)));

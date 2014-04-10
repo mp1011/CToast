@@ -6,6 +6,12 @@ using System.Drawing;
 
 namespace CToast
 {
+    enum LayoutOrientation
+    {
+        TopDown,
+        Center
+    }
+
     static class IVisualTreeUtil
     {
         public static IEnumerable<IVisualTree> GetChildren(this IVisualTree tree)
@@ -28,12 +34,22 @@ namespace CToast
                 foreach(var n in tree.RightTree.Traverse())
                     yield return n;
         }
+
+        public static float DepthPercent(this IVisualTree tree)
+        {
+            int depth = tree.Depth;
+            int treeDepth = tree.DeepestLevel;
+
+            return (float)depth / (float)treeDepth;
+        }
     }
 
     abstract class TreeLayout<T> : TreeRenderer<VisualTreeNode<T>>, ITreeLayout 
     {
         public abstract string Name { get; }
         private VisualTreeRenderer mRenderer;
+
+        public abstract LayoutOrientation Orientation { get; }
 
         public void SetRenderer(VisualTreeRenderer renderer)
         {
@@ -43,7 +59,7 @@ namespace CToast
         protected override VisualTreeNode<T> RenderNode(Node root)
         {
             if (root == null)
-                return new VisualTreeNode<T>();
+                return new VisualTreeNode<T>(root);
 
             var visualTree = CreateVisualTree(root, 0);
 
@@ -95,23 +111,6 @@ namespace CToast
             return RenderNode(n);
         }
 
-    }
-
-    class CenterTree<T> : ITreeLayoutStep<T>
-    {
-        public bool HorizontalOnly { get; set; }
-
-        public void DoLayout(VisualTreeNode<T> tree,Size layoutArea)
-        {
-            var rootPos = tree.Position;
-
-            var destinationPos = new Point((int)(layoutArea.Width / 2f),(int)(HorizontalOnly ? 10 : (layoutArea.Height /2f)));
-
-            int dx = destinationPos.X - rootPos.X;
-            int dy = destinationPos.Y - rootPos.Y;
-
-            tree.Move(dx,dy);
-        }
     }
 
     class SplitCollidingChildren<T> : ITreeLayoutStep<T>

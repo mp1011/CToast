@@ -15,7 +15,8 @@
 @fib(1) -> 1
 @fib(n) -> @fib(n-2) + @fib(n-1)
 
-@fib2() -> 0 & 1 & @zipWith(@(a,b)->a+b,@fib2(), t:@fib2())
+@add(a,b) -> a+b
+@fib2() -> 0 & 1 & @zipWith(@add,@fib2(), t:@fib2())
 @fib2(n) -> @take(n,@fib2())
 
 @fac(0) -> 1

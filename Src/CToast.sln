@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CToast", "CToast\CToast.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CToast Console", "CToast Console\CToast Console.csproj", "{157BC5E9-A0ED-4583-B637-F556555DCB72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreePainter_v3_1", "TreePainter_v3_1\TreePainter_v3_1.csproj", "{A021D213-47EA-441E-8168-BA118666FF08}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CToastTest", "CToastTest\CToastTest.csproj", "{F59DDCCA-3951-4D94-B94D-18ECF6D2ED81}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KP-ImageViewerV2", "KPImageViewer\KP-ImageViewerV2.csproj", "{68D11DDD-0081-4037-99D4-69B3AFCBDD8D}"
@@ -57,18 +55,6 @@ Global
 		{157BC5E9-A0ED-4583-B637-F556555DCB72}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{157BC5E9-A0ED-4583-B637-F556555DCB72}.Release|x86.ActiveCfg = Release|x86
 		{157BC5E9-A0ED-4583-B637-F556555DCB72}.Release|x86.Build.0 = Release|x86
-		{A021D213-47EA-441E-8168-BA118666FF08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Debug|x86.Build.0 = Debug|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A021D213-47EA-441E-8168-BA118666FF08}.Release|x86.ActiveCfg = Release|x86
-		{A021D213-47EA-441E-8168-BA118666FF08}.Release|x86.Build.0 = Release|x86
 		{F59DDCCA-3951-4D94-B94D-18ECF6D2ED81}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{F59DDCCA-3951-4D94-B94D-18ECF6D2ED81}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{F59DDCCA-3951-4D94-B94D-18ECF6D2ED81}.Debug|Mixed Platforms.Build.0 = Debug|x86

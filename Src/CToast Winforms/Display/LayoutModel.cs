@@ -9,6 +9,7 @@ namespace CToast
 {
     interface IVisualTree
     {
+        Node OriginalNode { get; }
         IVisualTree Parent { get; }
         IVisualTree LeftTree { get; }
         IVisualTree RightTree { get; }
@@ -24,6 +25,7 @@ namespace CToast
 
     interface ITreeLayout
     {
+        LayoutOrientation Orientation { get; }
         IVisualTree LayoutTree(Node root);
         void SetRenderer(VisualTreeRenderer renderer);
     }
@@ -31,7 +33,7 @@ namespace CToast
     class VisualTreeNode<T> : IVisualTree
     {
         public string Text { get; set; }
-
+        public Node OriginalNode { get; private set; }
         public VisualTreeNode<T> Parent { get; set; }
         public VisualTreeNode<T> LeftChild { get; set; }
         public VisualTreeNode<T> RightChild { get; set; }
@@ -44,6 +46,11 @@ namespace CToast
         public int Y { get { return Position.Y; } set { Position = new Point(Position.X, value); } }
 
         public T Data { get; set; }
+
+        public VisualTreeNode(Node original)
+        {
+            this.OriginalNode = original;
+        }
 
         public IEnumerable<VisualTreeNode<T>> Children
         {
@@ -161,12 +168,9 @@ namespace CToast
 
                 mCount = 0;
                 if (this.LeftTree != null)
-                    mCount += this.LeftTree.ChildNodeCount;
-                if (this.RightChild != null)
-                    mCount += this.RightTree.ChildNodeCount;
-
-                if (this.LeftTree == null && this.RightTree == null)
-                    mCount = 1;
+                    mCount += 1 + this.LeftTree.ChildNodeCount;
+                if (this.RightTree != null)
+                    mCount += 1 + this.RightTree.ChildNodeCount;
 
                 return mCount;
             }

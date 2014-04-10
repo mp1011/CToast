@@ -149,10 +149,6 @@
       <Project>{68D11DDD-0081-4037-99D4-69B3AFCBDD8D}</Project>
       <Name>KP-ImageViewerV2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TreePainter_v3_1\TreePainter_v3_1.csproj">
-      <Project>{A021D213-47EA-441E-8168-BA118666FF08}</Project>
-      <Name>TreePainter_v3_1</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

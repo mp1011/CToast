@@ -9,7 +9,8 @@ namespace CToast
 {
     class RadialTreeNodeData
     {
-
+        public int RangeStart { get; set; }
+        public int RangeSweep { get; set; }
     }
 
     class RadialLayout : TreeLayout<RadialTreeNodeData>
@@ -19,15 +20,19 @@ namespace CToast
 	        get { return "Radial";}
         }
 
+        public override LayoutOrientation Orientation
+        {
+            get { return LayoutOrientation.Center; }
+        }
+
         protected override VNode  CreateNewNode(Node n, int depth)
         {
-            return new VNode { Data = new RadialTreeNodeData() };
+            return new VNode(n) { Data = new RadialTreeNodeData() };
         }
 
         protected override IEnumerable<ITreeLayoutStep<RadialTreeNodeData>> GetLayoutSteps()
         {
             yield return new RadialLayoutStep();
-            yield return new CenterTree<RadialTreeNodeData> { HorizontalOnly = false };
         }
 
         class RadialLayoutStep : ITreeLayoutStep<RadialTreeNodeData>
@@ -44,7 +49,7 @@ namespace CToast
                     levelRadiuses.Add(8);
 
                 Point center = Point.Empty;
-                LayoutNode(center, center, levelRadiuses, 0, root);
+                LayoutNode(center, center, levelRadiuses, 0, root,0,360);
                 LayoutChildNodes(center, center, levelRadiuses, 0, 360, root);
 
             }
@@ -54,8 +59,8 @@ namespace CToast
 
                 if (node.LeftTree != null && node.RightTree != null)
                 {
-                    var count1 = node.LeftTree.ChildNodeCount;
-                    var count2 = node.RightTree.ChildNodeCount;
+                    var count1 = node.LeftTree.ChildNodeCount+1;
+                    var count2 = node.RightTree.ChildNodeCount + 1;
 
                     var pct1 = (float)count1 / (float)(count1 + count2);
 
@@ -71,10 +76,10 @@ namespace CToast
                     int rightStart = leftStart + leftSweep;
                     int rightSweep = (int)(parentRangeSweep * (1 - pct1));
 
-                    var leftLoc = LayoutNode(center, thisNodeLocation, levelRadiuses, leftStart + (leftSweep / 2), node.LeftChild);
+                    var leftLoc = LayoutNode(center, thisNodeLocation, levelRadiuses, leftStart + (leftSweep / 2), node.LeftChild,leftStart,leftSweep);
                     LayoutChildNodes(center, leftLoc, levelRadiuses, leftStart, leftSweep, node.LeftChild);
 
-                    var rightLoc = LayoutNode(center, thisNodeLocation, levelRadiuses, rightStart + (rightSweep / 2), node.RightChild);
+                    var rightLoc = LayoutNode(center, thisNodeLocation, levelRadiuses, rightStart + (rightSweep / 2), node.RightChild,rightStart,rightSweep);
                     LayoutChildNodes(center, rightLoc, levelRadiuses, rightStart, rightSweep, node.RightChild);
                 }
                 else if (node.LeftTree != null)
@@ -82,7 +87,7 @@ namespace CToast
                     int leftStart = parentRangeStart;
                     int leftSweep = parentRangeSweep;
 
-                    var leftLoc = LayoutNode(center, thisNodeLocation, levelRadiuses, leftStart + (leftSweep / 2), node.LeftChild);
+                    var leftLoc = LayoutNode(center, thisNodeLocation, levelRadiuses, leftStart + (leftSweep / 2), node.LeftChild, leftStart, leftSweep);
                     LayoutChildNodes(center, leftLoc, levelRadiuses, leftStart, leftSweep, node.LeftChild);
                 }
                 else if (node.RightTree != null)
@@ -90,17 +95,18 @@ namespace CToast
                     int rightStart = parentRangeStart;
                     int rightSweep = parentRangeSweep;
 
-                    var rightLoc = LayoutNode(center, thisNodeLocation, levelRadiuses, rightStart + (rightSweep / 2), node.RightChild);
+                    var rightLoc = LayoutNode(center, thisNodeLocation, levelRadiuses, rightStart + (rightSweep / 2), node.RightChild, rightStart, rightSweep);
                     LayoutChildNodes(center, rightLoc, levelRadiuses, rightStart, rightSweep, node.RightChild);
                 }
             }
 
-            private Point LayoutNode(Point center, Point parentLocation, List<int> levelRadiuses, int degree, VNode node)
+            private Point LayoutNode(Point center, Point parentLocation, List<int> levelRadiuses, int degree, VNode node, int start, int sweep)
             {
+                node.Data.RangeStart = Util.FixAngle(start);
+                node.Data.RangeSweep = sweep;
 
-                while (degree >= 360)
-                    degree -= 360;
-
+                degree = Util.FixAngle(degree);
+                
                 int distanceFromCenter = 0;
 
                 int level = node.Depth;
@@ -114,7 +120,6 @@ namespace CToast
 
                 node.Position = new Point(center.X + offset.X, center.Y + offset.Y);
                 return node.Position;
-
             }
 
         }

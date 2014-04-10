@@ -6,7 +6,6 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
-using TreePainter_v3_1;
 
 namespace CToast
 {
@@ -43,81 +42,6 @@ namespace CToast
                 AddNodes(treeNode.Nodes, node.RightNode);
 
             treeNode.Expand();
-        }
-    }
-
-    class TreeViewRendererAlternate : TreeRenderer<TreeView>
-    {
-        public TreeViewRendererAlternate()
-        {
-        }
-     
-        protected override TreeView RenderNode(Node root)
-        {
-            var tree = new TreeView();
-            AddNodes(tree.Nodes, root);
-            return tree;
-        }
-
-        private void AddNodes(TreeNodeCollection treeNodes, Node node)
-        {
-            if (node == null)
-                return;
-
-            var op = node.TypedValue<Operator>(null);
-
-            if (op is CommaOperator || op is OpenBracketOperator || op is ConcatOperator)
-            {
-                var nodes = treeNodes;
-                foreach (var itemNode in ListHelper.GetNodeList(node))
-                {
-                    var t = AddNodesNormal(nodes, itemNode);
-                    if (t == null)
-                        break;
-                    nodes = t.Nodes;
-                }
-            }
-            else if (op is FunctionCallOperator)
-            {
-                var t = new TreeNode("@" + node.LeftNode.Value);
-                t.Tag = node.LeftNode.Id;
-
-                treeNodes.Add(t);
-                treeNodes = t.Nodes;
-
-                foreach (var argNode in ListHelper.GetNodeList(node.RightNode))
-                {
-                    AddNodes(treeNodes, argNode);
-                }
-
-            }
-            else
-                AddNodesNormal(treeNodes, node);
-        }
-
-        private TreeNode AddNodesNormal(TreeNodeCollection treeNodes, Node node)
-        {
-            if (node == null || node.Value == null)
-                return null;
-
-            var treeNode = new TreeNode(node.Value.ToString());
-            treeNode.Tag = node.Id;
-
-            treeNodes.Add(treeNode);
-
-            AddNodes(treeNode.Nodes, node.LeftNode);
-            AddNodes(treeNode.Nodes, node.RightNode);
-
-            return treeNode;
-        }
-    }
-
-    class ColorTreeRenderer : TreeRenderer<BitmapWithOrigin>
-    {
-        protected override BitmapWithOrigin RenderNode(Node root)
-        {
-            TreeRenderer<TreeView> treeView = new TreeViewRendererAlternate();
-            return TreePainter_v3_1.TreeRender.RenderSingleTreeAsColorTree(treeView.Render(root));            
         }
     }
 
