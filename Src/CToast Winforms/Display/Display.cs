@@ -11,36 +11,36 @@ namespace CToast
 
     class VisualTreeRenderer : TreeRenderer<Bitmap>
     {
-        private Control mControl;
+        private Func<Size> mGetSize;
         private ITreeLayout mLayout;
 
         private List<IRenderingStep> mSteps = new List<IRenderingStep>();
 
-        public VisualTreeRenderer(Control control, ITreeLayout layout, IEnumerable<IRenderingStep> steps)
+        public VisualTreeRenderer(Func<Size> getSize, ITreeLayout layout, IEnumerable<IRenderingStep> steps)
         {
-            mControl = control;
+            mGetSize = getSize;
             mLayout = layout;
 
             mSteps.AddRange(steps);
         }
 
-        public Size LayoutSize { get { return mControl.Size; } }
+        public Size LayoutSize { get { return mGetSize(); } }
 
         protected override Bitmap RenderNode(Node root)
         {
             var visualTree = mLayout.LayoutTree(root);
 
-            var treeSize = AlignTree(visualTree, mControl.Size);
-            var maxSize = new Size(mControl.Width * 4, mControl.Height * 4);
+            var treeSize = AlignTree(visualTree, this.LayoutSize);
+            var maxSize = new Size(this.LayoutSize.Width * 4, this.LayoutSize.Height * 4);
 
             Bitmap bmp;
             Graphics g;
 
-            if (treeSize.Width > maxSize.Width || treeSize.Height > maxSize.Height)
+            if (false && (treeSize.Width > maxSize.Width || treeSize.Height > maxSize.Height))
             {
                 bmp = new Bitmap(maxSize.Width, maxSize.Height);
                 g = Graphics.FromImage(bmp);
-                g.ScaleTransform(maxSize.Width / treeSize.Width, maxSize.Width / treeSize.Width);
+                g.ScaleTransform((float)maxSize.Width / treeSize.Width, (float)maxSize.Width / treeSize.Width);
             }
             else
             {
@@ -52,6 +52,8 @@ namespace CToast
             foreach (var step in mSteps.OrderByDescending(p => p.DrawLayer))
                 step.Render(g, visualTree, treeSize);
 
+       //     new RenderTest().Render(g, visualTree, treeSize);
+
             g.Dispose();
             return bmp;
 
@@ -59,6 +61,8 @@ namespace CToast
 
         private Size AlignTree(IVisualTree tree, Size minimumSize)
         {
+            if (mLayout.Orientation == LayoutOrientation.NullLayout)
+                return minimumSize;
 
             tree.Move(-tree.TreeBounds.Left, -tree.TreeBounds.Top);
             int dx = 0, dy = 0;
@@ -82,14 +86,14 @@ namespace CToast
                 if (centerToBottom > centerToTop)
                 {
                     dy = (centerToBottom - centerToTop);
-                    centerToTop = tree.Position.Y + dx;
+                    centerToTop = tree.Position.Y + dy;
                 }
 
                 targetSize.Height = centerToTop * 2;
             }
             else
             {
-                dy = 10;
+                dy = 20;
             }
 
             tree.Move(dx, dy);
@@ -104,13 +108,37 @@ namespace CToast
                 dx = (minimumSize.Width / 2) - tree.Position.X;
                 targetSize.Width = minimumSize.Width;
             }
-                    
-            dy = 0;
-            if (mLayout.Orientation == LayoutOrientation.Center)
+
+            if (mLayout.Orientation == LayoutOrientation.Center && targetSize.Height < minimumSize.Height)
+            {
                 dy = (minimumSize.Height / 2) - tree.Position.Y;
-          
+                targetSize.Height = minimumSize.Height;               
+            }
+
             tree.Move(dx, dy);
 
+            //viewer will try to scale the image. must offset so it appears centered
+            float[] scales = new float[] { (float)minimumSize.Width / targetSize.Width, (float)minimumSize.Height / targetSize.Height }.OrderByDescending(p => p).ToArray();
+            var scale = scales.FirstOrDefault(p => p <= 1 && targetSize.Width * p <= minimumSize.Width + 1 && targetSize.Height * p <= minimumSize.Height + 1);
+
+            if (scale > 0)
+            {
+                int scaledWidth = (int)(targetSize.Width * scale);
+                if (scaledWidth < minimumSize.Width)
+                {
+                    var w = (minimumSize.Width - scale * targetSize.Width) / scale;
+
+                    targetSize.Width += (int)w;
+                    dx = (targetSize.Width /2) - tree.Position.X;
+                    tree.Move(dx, 0);
+                }
+            }
+
+                            
+            dy = 0;
+          //  if (mLayout.Orientation == LayoutOrientation.Center)
+             //   dy = (minimumSize.Height / 2) - tree.Position.Y;
+          
             return targetSize;
         }
         
@@ -124,13 +152,13 @@ namespace CToast
             return brush;
         }
 
-        public Size CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minImageSize)
         {
             Size largest = Size.Empty;
 
             foreach (var step in mSteps)
             {
-                var size = step.CalculateNodeSize(node);
+                var size = step.CalculateNodeSize(node,minImageSize);
                 if (size.Width * size.Height > largest.Width * largest.Height)
                     largest = size;
             }
@@ -174,7 +202,7 @@ namespace CToast
                     return Color.Gray;
 
                 default:
-                    return Color.White;
+                    return Color.Gray;
             }
         }
 
@@ -221,7 +249,36 @@ namespace CToast
         int DrawLayer { get; }
 
         void Render(Graphics g, IVisualTree tree, Size imageSize);
-        Size CalculateNodeSize(Node node);
+        Size CalculateNodeSize(Node node, Size minimumImageSize);
+    }
+
+    class RenderTest : IRenderingStep
+    {
+
+        public string Name
+        {
+            get { return "Test"; }
+        }
+
+        public int DrawLayer
+        {
+            get { return -1; }
+        }
+
+        public void Render(Graphics g, IVisualTree tree, Size imageSize)
+        {
+            g.DrawRectangle(new Pen(Color.Green, 4f), new Rectangle(0, 0, imageSize.Width, imageSize.Height));
+
+            g.DrawLine(new Pen(Color.Red), new Point(imageSize.Width / 2, 0), new Point(imageSize.Width / 2, imageSize.Height));
+
+            g.DrawLine(new Pen(Color.Orange), new Point(0, 0), new Point(imageSize.Width, imageSize.Height));
+            g.DrawLine(new Pen(Color.Orange), new Point(0, imageSize.Height), new Point(imageSize.Width, 0));
+        }
+
+        public Size CalculateNodeSize(Node node, Size minImageSize)
+        {
+            return Size.Empty;
+        }
     }
 
     class RenderLines : IRenderingStep 
@@ -253,7 +310,7 @@ namespace CToast
             Render(g, node.RightTree, imageSize);
         }
 
-        public Size CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minImageSize)
         {
             return Size.Empty;
         }
@@ -291,7 +348,7 @@ namespace CToast
             Render(g, node.RightTree, imageSize);
         }
 
-        public Size CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minImageSize)
         {
             return Size.Empty;
         }
@@ -354,7 +411,7 @@ namespace CToast
             return false;
         }
 
-        public Size CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minImageSize)
         {
             return new Size(8, 8);
         }
@@ -397,7 +454,7 @@ namespace CToast
             Render(g, tree.RightTree, false);
         }
 
-        public Size CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minImageSize)
         {
             return Size.Empty;
         }
@@ -433,7 +490,7 @@ namespace CToast
             }
         }
 
-        public Size CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minimumImageSize)
         {
             return Size.Empty;
         }
@@ -475,7 +532,7 @@ namespace CToast
         }
 
 
-        public Size CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minImageSize)
         {
             if (node == null || node.Value == null)
                 return Size.Empty;
@@ -517,7 +574,48 @@ namespace CToast
             g.FillRectangle(brush, rec);
         }
 
-        public Size CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minimumImageSize)
+        {
+            return Size.Empty;
+        }
+    }
+
+    class RenderExpression : IRenderingStep
+    {
+
+        public string Name
+        {
+            get { return "Expression"; }
+        }
+
+        public int DrawLayer
+        {
+            get { return -1; }
+        }
+
+        private Font mFont = new Font("Courier", 14f, FontStyle.Regular);
+
+        public void Render(Graphics g, IVisualTree tree, Size imageSize)
+        {
+            StringFormat format = StringFormat.GenericTypographic;
+            format.Alignment = StringAlignment.Center;
+            format.LineAlignment = StringAlignment.Near;
+            format.FormatFlags = StringFormatFlags.FitBlackBox;
+
+            var text = new SyntaxRenderer().Render(tree.OriginalNode);
+            var rec = new Rectangle(0, 0, imageSize.Width, imageSize.Height);
+
+            var textSize = g.MeasureString(text, mFont, rec.Width, format);
+            rec.Height = (int)textSize.Height;
+
+            g.FillRectangle(new SolidBrush(Color.Black), rec);
+            g.DrawRectangle(new Pen(Color.Gray), rec);
+
+         
+            g.DrawString(text, mFont, new SolidBrush(Color.White), rec, format);
+        }
+
+        public Size CalculateNodeSize(Node node, Size minImageSize)
         {
             return Size.Empty;
         }
@@ -528,7 +626,7 @@ namespace CToast
 
         public string Name
         {
-            get { return "Expression"; }
+            get { return "Tree Expressions"; }
         }
 
         public int DrawLayer
@@ -560,7 +658,7 @@ namespace CToast
 
         private Font mFont = new Font("Courier", 10f, FontStyle.Regular);
 
-        public Size CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minImageSize)
         {
 
             if (node == null)
@@ -599,7 +697,7 @@ namespace CToast
         protected abstract void RenderTyped(Graphics g, VisualTreeNode<T> node, Size imageSize);
 
 
-        public Size  CalculateNodeSize(Node node)
+        public Size CalculateNodeSize(Node node, Size minImageSize)
         {
  	        return Size.Empty;
         }
@@ -640,20 +738,16 @@ namespace CToast
 
             Color c;
             Color c2 = Color.Black;
-            if (node.OriginalNode.IsAtomic)
-            {
-                c = Color.LightYellow;
-                c2 = Color.Gold;
-            }
-            else if (isLeft)
+           
+            if (isLeft)
             {
                 c = Color.White;
                 c2 = Color.LightGreen;
             }
             else
             {
-                c = Color.White;
-                c2 = Color.LightBlue;
+                c = Color.LightYellow;
+                c2 = Color.Gold;
             }
 
             float pct = .05f * node.Depth;

@@ -9,7 +9,8 @@ namespace CToast
     enum LayoutOrientation
     {
         TopDown,
-        Center
+        Center,
+        NullLayout
     }
 
     static class IVisualTreeUtil
@@ -61,7 +62,7 @@ namespace CToast
             if (root == null)
                 return new VisualTreeNode<T>(root);
 
-            var visualTree = CreateVisualTree(root, 0);
+            var visualTree = CreateVisualTree(root, 0, mRenderer.LayoutSize);
 
             var deepestLevel = visualTree.AllChildren.Max(p => p.Depth);
             foreach (var node in visualTree.AllChildren)
@@ -78,7 +79,7 @@ namespace CToast
         protected abstract IEnumerable<ITreeLayoutStep<T>> GetLayoutSteps();
         protected abstract VisualTreeNode<T> CreateNewNode(Node n, int depth);
 
-        private VisualTreeNode<T> CreateVisualTree(Node n, int depth)
+        private VisualTreeNode<T> CreateVisualTree(Node n, int depth, Size minImageSize)
         {
             if (n == null || n.Value == null)
                 return null;
@@ -88,11 +89,11 @@ namespace CToast
             if (n.Value != null)
                 vt.Text = n.Value.ToString();
 
-            vt.LeftChild = CreateVisualTree(n.LeftNode, depth + 1);
-            vt.RightChild = CreateVisualTree(n.RightNode, depth + 1);
+            vt.LeftChild = CreateVisualTree(n.LeftNode, depth + 1, minImageSize);
+            vt.RightChild = CreateVisualTree(n.RightNode, depth + 1, minImageSize);
             vt.Depth = depth;
             vt.Index = 1;
-            vt.NodeSize = mRenderer.CalculateNodeSize(n);
+            vt.NodeSize = mRenderer.CalculateNodeSize(n, minImageSize);
 
             int index = 1;
             foreach (var child in vt.Children)
@@ -142,7 +143,6 @@ namespace CToast
         }
     }
 
-
     class DebugRelabelNodes<T> : ITreeLayoutStep<T>
     {
 
@@ -155,4 +155,54 @@ namespace CToast
 
 
     }
+
+
+    class NullData { }
+
+    class NullLayout : TreeLayout<NullData>
+    {
+
+        protected override VisualTreeNode<NullData> CreateNewNode(Node n, int depth)
+        {
+            return new VisualTreeNode<NullData>(n);
+        }
+
+        public override LayoutOrientation Orientation
+        {
+            get { return LayoutOrientation.NullLayout; }
+        }
+
+        public override string Name
+        {
+            get { return "Null Layout"; }
+        }
+
+        protected override IEnumerable<ITreeLayoutStep<NullData>> GetLayoutSteps()
+        {
+            yield return new NullLayoutStep();
+        }
+
+
+        class NullLayoutStep : ITreeLayoutStep<NullData>
+        {
+
+            public void DoLayout(VisualTreeNode<NullData> tree, Size layoutArea)
+            {
+                foreach (var node in tree.AllChildren)
+                    node.Position = new Point(node.NodeBounds.Width / 2, node.NodeBounds.Height / 2);
+
+                if (tree.Children.Count() > 0)
+                {
+                    var fc = tree.Children.First();
+                    fc.Position = new Point(layoutArea.Width - (fc.NodeBounds.Width / 2), layoutArea.Height - (fc.NodeBounds.Height / 2));
+                }
+
+                var ctr = layoutArea.Width / 2;
+                tree.X = layoutArea.Width / 2;
+                tree.Move(0, 0);
+            }
+
+        }
+    }
+
 }

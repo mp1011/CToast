@@ -29,21 +29,19 @@ namespace CToast
             }
 
             mCustomTreeRenderer = new CustomTreeRenderer();
+            mHybridRenderer = HybridRenderer.TypeB();
 
             pgeGraph.Tag = new FormRendererHelper<GraphSharpViewModel> { Renderer = new GraphSharpRenderer(), AfterRenderAction = (a, n) => graphControl1.DataContext = a };
 
             pgeImage.Tag = new FormRendererHelper<Bitmap> { Renderer = mCustomTreeRenderer, AfterRenderAction = (a, n) => {
 
-              //  var zoom = imgTree.Zoom;             
                 imgTree.Image = a;
-             //   imgTree.Zoom = zoom;
-                
+              //  imgTree.Zoom = (int)(((float)imgTree.PanelWidth / (float)imgTree.Width) * 100f);
 
             } };
             pgeText.Tag = new FormRendererHelper<string> { Renderer = new SyntaxRenderer(), AfterRenderAction = (a, n) => { textBox1.Text = a; } };
-            pgeSunburst.Tag = new FormRendererHelper<Bitmap> { Renderer = new SunburstRenderer(imgSunburst), AfterRenderAction = (a, n) => { imgSunburst.Image = a; } };
             pgeTree.Tag = new FormRendererHelper<TreeView> {Renderer = new TreeViewRenderer(treeView1), NoAsync=true};
-
+            pgeHybrid.Tag = new FormRendererHelper<Bitmap> { Renderer = mHybridRenderer, AfterRenderAction = (a,n) => { imgHybrid.Image = a;}};
 
             cboLayout.Items.Add(new BuchheimLayout());
             cboLayout.Items.Add(new RadialLayout());
@@ -59,6 +57,7 @@ namespace CToast
             clDrawStyle.Items.Add(new RenderCircles());
             clDrawStyle.Items.Add(new RenderBackdrop());
             clDrawStyle.Items.Add(new RenderSunburst());
+            clDrawStyle.Items.Add(new RenderExpression());
 
             clDrawStyle.DisplayMember = "Name";
 
@@ -67,7 +66,7 @@ namespace CToast
             clDrawStyle.SetItemChecked(1, true);
             clDrawStyle.SetItemChecked(2, true);
 
-            mCustomTreeRenderer.Update(imgTree, cboLayout, clDrawStyle);
+            mCustomTreeRenderer.Update(()=> new Size(imgTree.PanelWidth,imgTree.PanelHeight), cboLayout, clDrawStyle);
      
         }
 
@@ -210,10 +209,11 @@ namespace CToast
         #region "Tree Rendering"
 
         private CustomTreeRenderer mCustomTreeRenderer;
+        private HybridRenderer mHybridRenderer;
 
         private void cboLayout_SelectedIndexChanged(object sender, EventArgs e)
         {
-            mCustomTreeRenderer.Update(imgTree, cboLayout, clDrawStyle);
+            mCustomTreeRenderer.Update(() => new Size(imgTree.PanelWidth, imgTree.PanelHeight), cboLayout, clDrawStyle);
             RenderTree();
         }
 
@@ -226,7 +226,7 @@ namespace CToast
 
         private void clDrawStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
-            mCustomTreeRenderer.Update(imgTree, cboLayout, clDrawStyle);
+            mCustomTreeRenderer.Update(() => new Size(imgTree.PanelWidth, imgTree.PanelHeight), cboLayout, clDrawStyle);
             RenderTree();
         }
 
@@ -298,7 +298,11 @@ namespace CToast
         private void btnSaveToDisk_Click(object sender, EventArgs e)
         {            
             btnSaveToDisk.Enabled = false;
-            saveWorker.RunWorkerAsync(mCustomTreeRenderer);
+
+            if (tabDisplay.SelectedTab == pgeHybrid)
+                saveWorker.RunWorkerAsync(mHybridRenderer);
+            else
+                saveWorker.RunWorkerAsync(mCustomTreeRenderer);
         }
 
         private void saveWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -306,9 +310,11 @@ namespace CToast
             string folder = PathHelper.CreateOutputFolder();
             System.IO.Directory.CreateDirectory(folder);
 
+            var renderer = e.Argument as TreeRenderer<Bitmap>;
+
             for (int i = 0; i < mCurrentEvaluation.TotalSteps; i++)
             {
-                var image = mCustomTreeRenderer.Render(mCurrentEvaluation.Steps[i]);
+                var image = renderer.Render(mCurrentEvaluation.Steps[i]);
                 image.Save(folder + "\\" + i.ToString("00000") + ".png", System.Drawing.Imaging.ImageFormat.Png);
 
                 saveWorker.ReportProgress((int)(((float)i / (float)mCurrentEvaluation.TotalSteps) * 100));
@@ -338,6 +344,8 @@ namespace CToast
             else
             {
                 tbDisplayedStep.Value = 0;
+                timer1.Interval = Convert.ToInt32(txtAnimFrameDuration.Text);
+                timer1.Tag = Convert.ToInt32(txtAnimStep.Text);
                 timer1.Enabled = true;
             }
         }
@@ -348,7 +356,7 @@ namespace CToast
                 timer1.Enabled = false;
             else
             {
-                tbDisplayedStep.Value++;
+                tbDisplayedStep.Value = Math.Min(tbDisplayedStep.Maximum, tbDisplayedStep.Value + (int)timer1.Tag);
                 mCurrentEvaluation.DisplayedStep = tbDisplayedStep.Value;
                 RenderTreeNoAsync();
             }
@@ -396,14 +404,14 @@ namespace CToast
         {
         }
 
-        public void Update(Control drawPanel, ComboBox mLayoutsDropdown, CheckedListBox mDrawStyleCheckList)
+        public void Update(Func<Size> getSize, ComboBox mLayoutsDropdown, CheckedListBox mDrawStyleCheckList)
         {
             var layout = mLayoutsDropdown.SelectedItem as ITreeLayout;
             if (layout == null)
                 return;
 
             var steps = mDrawStyleCheckList.CheckedItems.OfType<IRenderingStep>().ToArray();
-            mRenderer = new VisualTreeRenderer(drawPanel, layout, steps);
+            mRenderer = new VisualTreeRenderer(getSize, layout, steps);
 
             layout.SetRenderer(mRenderer);
 

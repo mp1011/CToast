@@ -58,12 +58,17 @@
             this.btnEvaluate = new System.Windows.Forms.Button();
             this.worker = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.txtAnimStep = new System.Windows.Forms.TextBox();
+            this.txtAnimFrameDuration = new System.Windows.Forms.TextBox();
             this.pbSaveToDisk = new System.Windows.Forms.ProgressBar();
             this.btnSaveToDisk = new System.Windows.Forms.Button();
             this.btnAnimate = new System.Windows.Forms.Button();
             this.tbDisplayedStep = new System.Windows.Forms.TrackBar();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.saveWorker = new System.ComponentModel.BackgroundWorker();
+            this.pgeHybrid = new System.Windows.Forms.TabPage();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.imgHybrid = new KaiwaProjects.KpImageViewer();
             this.tabDisplay.SuspendLayout();
             this.pgeImage.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -75,6 +80,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbSteps)).BeginInit();
             this.pnlBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbDisplayedStep)).BeginInit();
+            this.pgeHybrid.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabDisplay
@@ -84,6 +90,7 @@
             this.tabDisplay.Controls.Add(this.pgeText);
             this.tabDisplay.Controls.Add(this.pgeSunburst);
             this.tabDisplay.Controls.Add(this.pgeTree);
+            this.tabDisplay.Controls.Add(this.pgeHybrid);
             this.tabDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabDisplay.Location = new System.Drawing.Point(0, 104);
             this.tabDisplay.Name = "tabDisplay";
@@ -416,6 +423,8 @@
             // 
             // pnlBottom
             // 
+            this.pnlBottom.Controls.Add(this.txtAnimStep);
+            this.pnlBottom.Controls.Add(this.txtAnimFrameDuration);
             this.pnlBottom.Controls.Add(this.pbSaveToDisk);
             this.pnlBottom.Controls.Add(this.btnSaveToDisk);
             this.pnlBottom.Controls.Add(this.btnAnimate);
@@ -426,19 +435,35 @@
             this.pnlBottom.Size = new System.Drawing.Size(983, 67);
             this.pnlBottom.TabIndex = 10;
             // 
+            // txtAnimStep
+            // 
+            this.txtAnimStep.Location = new System.Drawing.Point(155, 32);
+            this.txtAnimStep.Name = "txtAnimStep";
+            this.txtAnimStep.Size = new System.Drawing.Size(36, 20);
+            this.txtAnimStep.TabIndex = 9;
+            this.txtAnimStep.Text = "1";
+            // 
+            // txtAnimFrameDuration
+            // 
+            this.txtAnimFrameDuration.Location = new System.Drawing.Point(113, 33);
+            this.txtAnimFrameDuration.Name = "txtAnimFrameDuration";
+            this.txtAnimFrameDuration.Size = new System.Drawing.Size(36, 20);
+            this.txtAnimFrameDuration.TabIndex = 8;
+            this.txtAnimFrameDuration.Text = "10";
+            // 
             // pbSaveToDisk
             // 
             this.pbSaveToDisk.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbSaveToDisk.Location = new System.Drawing.Point(265, 38);
+            this.pbSaveToDisk.Location = new System.Drawing.Point(572, 38);
             this.pbSaveToDisk.Name = "pbSaveToDisk";
-            this.pbSaveToDisk.Size = new System.Drawing.Size(706, 13);
+            this.pbSaveToDisk.Size = new System.Drawing.Size(399, 13);
             this.pbSaveToDisk.TabIndex = 7;
             this.pbSaveToDisk.Value = 1;
             // 
             // btnSaveToDisk
             // 
-            this.btnSaveToDisk.Location = new System.Drawing.Point(170, 32);
+            this.btnSaveToDisk.Location = new System.Drawing.Point(480, 32);
             this.btnSaveToDisk.Name = "btnSaveToDisk";
             this.btnSaveToDisk.Size = new System.Drawing.Size(86, 23);
             this.btnSaveToDisk.TabIndex = 2;
@@ -479,6 +504,54 @@
             this.saveWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.saveWorker_ProgressChanged);
             this.saveWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.saveWorker_RunWorkerCompleted);
             // 
+            // pgeHybrid
+            // 
+            this.pgeHybrid.Controls.Add(this.imgHybrid);
+            this.pgeHybrid.Controls.Add(this.panel2);
+            this.pgeHybrid.Location = new System.Drawing.Point(4, 22);
+            this.pgeHybrid.Name = "pgeHybrid";
+            this.pgeHybrid.Padding = new System.Windows.Forms.Padding(3);
+            this.pgeHybrid.Size = new System.Drawing.Size(975, 338);
+            this.pgeHybrid.TabIndex = 7;
+            this.pgeHybrid.Text = "Hybrid";
+            this.pgeHybrid.UseVisualStyleBackColor = true;
+            // 
+            // panel2
+            // 
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(170, 332);
+            this.panel2.TabIndex = 0;
+            // 
+            // imgHybrid
+            // 
+            this.imgHybrid.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.imgHybrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imgHybrid.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.imgHybrid.GifAnimation = false;
+            this.imgHybrid.GifFPS = 15D;
+            this.imgHybrid.Image = null;
+            this.imgHybrid.Location = new System.Drawing.Point(173, 3);
+            this.imgHybrid.MenuColor = System.Drawing.Color.LightSteelBlue;
+            this.imgHybrid.MenuPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgHybrid.MinimumSize = new System.Drawing.Size(454, 157);
+            this.imgHybrid.Name = "imgHybrid";
+            this.imgHybrid.NavigationPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgHybrid.NavigationTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgHybrid.OpenButton = false;
+            this.imgHybrid.PreviewButton = false;
+            this.imgHybrid.PreviewPanelColor = System.Drawing.Color.LightSteelBlue;
+            this.imgHybrid.PreviewText = "Preview";
+            this.imgHybrid.PreviewTextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgHybrid.Rotation = 0;
+            this.imgHybrid.Scrollbars = false;
+            this.imgHybrid.ShowPreview = true;
+            this.imgHybrid.Size = new System.Drawing.Size(799, 332);
+            this.imgHybrid.TabIndex = 1;
+            this.imgHybrid.TextColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.imgHybrid.Zoom = 100D;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -504,6 +577,7 @@
             this.pnlBottom.ResumeLayout(false);
             this.pnlBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbDisplayedStep)).EndInit();
+            this.pgeHybrid.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -545,5 +619,10 @@
         private System.Windows.Forms.ProgressBar pbSaveToDisk;
         private System.Windows.Forms.Button btnSaveToDisk;
         private System.ComponentModel.BackgroundWorker saveWorker;
+        private System.Windows.Forms.TextBox txtAnimStep;
+        private System.Windows.Forms.TextBox txtAnimFrameDuration;
+        private System.Windows.Forms.TabPage pgeHybrid;
+        private KaiwaProjects.KpImageViewer imgHybrid;
+        private System.Windows.Forms.Panel panel2;
     }
 }
