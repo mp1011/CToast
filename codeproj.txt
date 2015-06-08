@@ -1,0 +1,29 @@
+http://imgur.com/BGC9yFo,c5YTNIz,YZiM5uO,Q9QjRCR
+http://imgur.com/BGC9yFo,c5YTNIz,YZiM5uO,Q9QjRCR#1
+http://imgur.com/BGC9yFo,c5YTNIz,YZiM5uO,Q9QjRCR#2
+http://imgur.com/BGC9yFo,c5YTNIz,YZiM5uO,Q9QjRCR#3
+
+https://github.com/mp1011/CToast
+
+
+Introduction
+
+You normally don't see, or care, what steps a compiler performs in order to translate an expression like "factorial of 5" into the number 120. Under the hood, though, the compiler is interpreting your statement as a syntax tree.
+
+CToast is basically a "compiler" you can see. It shows you the tree representation of your expression, along with every step of its evaluation along the way. In each step, a node in the tree is replaced by its evaluation, which may be a single value or another tree. Expressions will grow and shrink, eventually collapsing to a single value or expanding indefinitely.
+
+
+Background
+
+"CToast", in some form or another, has been kicked around for years. It started at one of my old jobs when we needed a way to parse a string containing a mathematical expressions. This lead me to learn about parse trees and their role in programming. I realized that a simple, but fully operational programming language could be made just by adding the ability to define and evaluate functions to the parse tree. Of course it wasn't quite that simple: some syntactic constructs, which seemed to make perfect sense in the ideal case, wound up causing ambiguity when used in more complicated expressions. Basically I would work on this project for a few weeks, run into a roadblock, and push it to the side for months or even years before somehow getting inspired to try it again.
+
+
+Using the Code
+
+There are a few areas of interest to explore in CToast. You can try writing your own functions in the CToast language and see how they evaluate. 
+
+You can also expand the language by definining your own operators.
+
+
+Analysis
+
